@@ -1,0 +1,3 @@
+https://www.php.net/docs.php
+https://www.guru99.com/web-security-vulnerabilities.html
+http://www.slimframework.com/

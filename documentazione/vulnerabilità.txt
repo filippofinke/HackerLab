@@ -1,0 +1,8 @@
+SQL Injection
+Cross Site Scripting (XSS)
+Broken Authentication
+Insecure Direct Object References
+Security Misconfiguration
+Failure to restrict URL Access
+File inclusion vulnerability
+Account takeover vulnerability
