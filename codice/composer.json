@@ -1,0 +1,17 @@
+{
+    "name": "filippofinke/HackerLab",
+    "description": "Sito web per la dimostrazione di vulnerabilità",
+    "authors": [
+        {
+            "name": "Filippo Finke"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "slim/php-view": "^2.0",
+        "slim/slim": "^3.1"
+    },
+    "scripts": {
+        "start": "sudo php -S 127.0.0.1:80 -t public"
+    }
+}
