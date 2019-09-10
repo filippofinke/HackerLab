@@ -1,0 +1,11 @@
+permissions(name)
+name primary key
+
+users(id, full_name, email, password, permission(fk), reset_token)
+id primary key
+
+articles(id, user_id(fk), title, image, content, created_at)
+id primary key
+
+comments(id, article_id(fk), user_id(fk), comment, created_at)
+id primary key
