@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Filippo Finke">
 
-  <title>HackerLab - Home</title>
+  <title>HackerLab - Filippo Finke</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -28,10 +28,10 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="/">Home</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/profile">Profilo</a>
           </li>
           <li class="nav-item">
@@ -53,7 +53,10 @@
       <!-- Blog Entries Column -->
       <div class="col-md-8">
 
-        <h1 class="my-4">Ultimi articoli</h1>
+        <h1 class="my-4">
+          Articoli di Filippo Finke<br>
+          <small>SE ADMIN: email@email.com</small>
+        </h1>
 
         <!-- Blog Post -->
         <div class="card mb-4">
@@ -96,57 +99,10 @@
           </div>
         </div>
 
-        <!-- Side Widget -->
-        <div class="card my-4">
-          <h5 class="card-header">Accedi</h5>
-          <div class="card-body">
-            <div class="tab-content" id="tabs">
-              <div class="tab-pane fade show active" id="login" role="tabpanel">
-                <form>
-                  <div class="form-group">
-                    <label for="email">Indirizzo email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Email">
-                  </div>
-                  <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password">
-                  </div>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-secondary">Accedi</button>
-                    <br>
-                    oppure
-                    <a href="/register">Registrati</a>
-                    <hr>
-                    <a data-toggle="tab" href="#forgot-password">Password dimenticata?</a>
-                  </div>
-                </form>
-              </div>
-              <div class="tab-pane fade" id="forgot-password" role="tabpanel">
-                <form>
-                  <div class="form-group">
-                    <label for="email_reset">Indirizzo email</label>
-                    <input type="email" class="form-control" id="email_reset" placeholder="Email">
-                  </div>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-secondary">Recupera la password</button>
-                    <hr>
-                    <a data-toggle="tab" href="#login">Accedi</a>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="card my-4">
           <h5 class="card-header">Accesso eseguito</h5>
           <div class="card-body">
             Bevenuto Filippo Finke!
-            <br>
-            <br>
-            <div class="text-center">
-              <button class="btn btn-secondary">Pubblica un articolo</button>
-            </div>
           </div>
         </div>
 
@@ -166,45 +122,10 @@
     <!-- /.container -->
   </footer>
 
-  <div class="modal fade" id="resetModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Imposta la tua password</h5>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <input type="text" class="form-control" id="reset_token" disabled>
-            </div>
-            <div class="form-group">
-              <label for="reset_password">Password</label>
-              <input type="password" class="form-control" id="reset_password" placeholder="Password">
-            </div>
-            <div class="form-group">
-              <label for="reset_password_repeat">Ripeti password</label>
-              <input type="password" class="form-control" id="reset_password_repeat" placeholder="Password">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary">Imposta password</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
-<script>
-let params = new URLSearchParams(window.location.search);
-let token = params.get('reset_password');
-if(token != null) {
-  $("#reset_token").val(token);
-  $("#resetModal").modal({backdrop: 'static', keyboard: false});
-}
-</script>
+
 </html>

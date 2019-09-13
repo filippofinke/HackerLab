@@ -14,6 +14,10 @@ return function (App $app) {
         $this->view->render($response, "register.phtml", $args);
     });
 
+    $app->get('/profile', function (Request $request, Response $response, array $args) use ($app) {
+        $this->view->render($response, "profile.phtml", $args);
+    });
+
     $app->get('/post', function (Request $request, Response $response, array $args) use ($app) {
         $this->view->render($response, "post.phtml", $args);
     });
