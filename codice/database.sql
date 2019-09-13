@@ -14,7 +14,7 @@ USE hackerlab;
 
 # Tabella permessi
 CREATE TABLE permissions(
-    name VARCHAR(30) PRIMARY KEy
+    name VARCHAR(30) PRIMARY KEY
 );
 
 # Tabella utenti
@@ -38,7 +38,7 @@ CREATE TABLE articles(
     image VARCHAR(255) DEFAULT NULL,
     content TEXT(1000) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 # Tabella commenti
