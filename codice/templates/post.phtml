@@ -7,13 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Filippo Finke">
 
-  <title>HackerLab - Come installare Windows10</title>
+  <title>HackerLab - <?php echo $post["title"]; ?></title>
 
   <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link href="css/blog-post.css" rel="stylesheet">
+  <link href="/css/blog-post.css" rel="stylesheet">
 
 </head>
 
@@ -34,11 +34,19 @@
           <li class="nav-item">
             <a class="nav-link" href="/profile">Profilo</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Registrati</a>
+          <?php if($permission === "administrator"): ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
+              Pannello di amministrazione
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropDown">
+              <a class="dropdown-item" href="/admin/articoli">Articoli</a>
+              <a class="dropdown-item" href="/admin/utenti">Utenti</a>
+            </div>
           </li>
+          <?php endif; ?>
           <li class="nav-item">
-            <a class="nav-link" href="/admin">Pannello di amministrazione</a>
+            <a class="nav-link" href="/logout">Esci</a>
           </li>
         </ul>
       </div>
@@ -54,36 +62,31 @@
       <div class="col-lg-8">
 
         <!-- Title -->
-        <h1 class="mt-4">Come installare Windows10</h1>
+        <h1 class="mt-4"><?php echo $post["title"]; ?></h1>
 
         <!-- Author -->
         <p class="lead">
           di
-          <a href="/profile">Filippo Finke</a>
+          <a href="/profile/<?php echo $post["user_id"]; ?>"><?php echo $post["full_name"]; ?></a>
         </p>
 
         <hr>
 
         <!-- Date/Time -->
-        <p>Pubblicato il 1 gennaio 2019 alle ore 12:22</p>
+        <p>Pubblicato il <?php echo date("d.m.Y", strtotime($post["created_at"])); ?> alle <?php echo date("H:i", strtotime($post["created_at"])); ?></p>
 
         <hr>
 
         <!-- Preview Image -->
         <div class="text-center">
-          <img style="max-height: 300px;" src="https://upload.wikimedia.org/wikipedia/it/5/51/Windows_10_1903_Desktop.png">
+          <img style="max-height: 300px;" src="<?php echo $post["image"]; ?>">
         </div>
         <hr>
 
         <!-- Post Content -->
 
         <p>
-          <h1>Windows10</h1>
-          Per eseguire un installazione di Windows10 ti serviranno le seguenti...
-          <ul>
-            <li>Test</li>
-          </ul>
-          <a href="#">Test</a>
+          <?php echo $post["content"]; ?>
         </p>
 
         <hr>
@@ -92,37 +95,33 @@
         <div class="card my-4">
           <h5 class="card-header">Lascia un commento: </h5>
           <div class="card-body">
-            <form>
+            <form method="POST">
               <div class="form-group">
-                <textarea class="form-control" rows="2"></textarea>
+                <textarea name="comment" maxlength="255" class="form-control" rows="2"></textarea>
               </div>
+              <?php if(isset($_SESSION["error"])): ?>
+                <div class="alert alert-danger" role="alert">
+                  <?php echo $_SESSION["error"]; ?>
+                  <?php unset($_SESSION["error"]); ?>
+                </div>
+              <?php endif; ?>
               <button type="submit" class="btn btn-secondary">Invia</button>
             </form>
           </div>
         </div>
 
-        <!-- Single Comment -->
+        <?php foreach($comments as $comment): ?>
         <div class="media mb-4">
           <img style="max-width: 50px;" class="d-flex mr-3 rounded-circle" src="/images/user.png">
           <div class="media-body">
             <h5 class="mt-0">
-              <a href="/profile">Filippo Finke</a>
-              <small>1 gennaio 2019</small>
+              <a href="/profile/<?php echo $comment["user_id"]; ?>"> <?php echo $comment["full_name"]; ?></a>
+              <small><?php echo date("d.m.y", strtotime($comment["created_at"])); ?></small>
             </h5>
-            Guida utilissima!
+            <?php echo $comment["comment"]; ?>
           </div>
         </div>
-
-        <div class="media mb-4">
-          <img style="max-width: 50px;" class="d-flex mr-3 rounded-circle" src="/images/user.png">
-          <div class="media-body">
-            <h5 class="mt-0">
-              <a href="/profile">Filippo Finke</a>
-              <small>1 gennaio 2019</small>
-            </h5>
-            Test!
-          </div>
-        </div>
+        <?php endforeach; ?>
 
       </div>
 
@@ -133,19 +132,21 @@
         <div class="card my-4">
           <h5 class="card-header">Cerca</h5>
           <div class="card-body">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Ricerca...">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Cerca!</button>
-              </span>
-            </div>
+            <form method="GET" action="/">
+              <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="Ricerca...">
+                <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="submit">Cerca!</button>
+                </span>
+              </div>
+            </form>
           </div>
         </div>
 
         <div class="card my-4">
           <h5 class="card-header">Accesso eseguito</h5>
           <div class="card-body">
-            Bevenuto Filippo Finke!
+          Bevenuto <b><?php echo $_SESSION["user"]["full_name"] ?? "full_name"; ?></b>
           </div>
         </div>
 
@@ -166,8 +167,8 @@
   </footer>
 
   <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

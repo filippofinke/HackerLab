@@ -10,10 +10,10 @@
   <title>HackerLab - Home</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link href="css/blog-home.css" rel="stylesheet">
+  <link href="/css/blog-home.css" rel="stylesheet">
 
 </head>
 
@@ -31,15 +31,31 @@
           <li class="nav-item active">
             <a class="nav-link" href="/">Home</a>
           </li>
+          <?php if($permission !== null): ?>
           <li class="nav-item">
             <a class="nav-link" href="/profile">Profilo</a>
           </li>
+          <?php else: ?>
           <li class="nav-item">
             <a class="nav-link" href="/register">Registrati</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin">Pannello di amministrazione</a>
+          <?php endif; ?>
+          <?php if($permission === "administrator"): ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
+              Pannello di amministrazione
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropDown">
+              <a class="dropdown-item" href="/admin/articoli">Articoli</a>
+              <a class="dropdown-item" href="/admin/utenti">Utenti</a>
+            </div>
           </li>
+          <?php endif; ?>
+          <?php if($permission !== null): ?>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Esci</a>
+          </li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>
@@ -50,31 +66,47 @@
 
     <div class="row">
 
-      <!-- Blog Entries Column -->
       <div class="col-md-8">
-
+        <?php if(isset($_GET["search"]) && $_GET["search"] != ""): ?>
+        <h1 class="my-4">Ricerca per <?php echo htmlspecialchars($_GET["search"]); ?></h1>
+        <?php else: ?>
         <h1 class="my-4">Ultimi articoli</h1>
+        <?php endif; ?>
 
-        <!-- Blog Post -->
+        <?php if(isset($_SESSION["big_error"])): ?>
+        <div class="alert alert-danger" role="alert">
+          <?php echo $_SESSION["big_error"]; ?>
+          <?php unset($_SESSION["big_error"]); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php foreach($articles as $article): ?>
         <div class="card mb-4">
-          <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/it/5/51/Windows_10_1903_Desktop.png">
+          <img class="card-img-top" src="<?php echo $article["image"]; ?>">
           <div class="card-body">
-            <h2 class="card-title">Come installare Windows10</h2>
-            <a href="/post" class="btn btn-primary">Vai all'articolo &rarr;</a>
+            <h2 class="card-title"><?php echo $article["title"]; ?></h2>
+            <a href="/post/<?php echo $article["id"]; ?>" class="btn btn-primary">Vai all'articolo &rarr;</a>
           </div>
           <div class="card-footer text-muted">
-            Pubblicato il 1 gennaio 2019 da
-            <a href="/profile">Filippo Finke</a>
+            Pubblicato il <?php echo date("d.m.Y", strtotime($article["created_at"])); ?> da
+            <a href="/profile/<?php echo $article["user_id"]; ?>"><?php echo $article["full_name"]; ?></a>
           </div>
         </div>
+        <?php endforeach; ?>
 
         <!-- Pagination -->
         <ul class="pagination justify-content-center mb-4">
-          <li class="page-item disabled">
-            <a class="page-link" href="#">&larr; Recenti</a>
+          <?php 
+          $oldpage = $page - 1;
+          if($oldpage < 0) $oldpage = 0;
+          $search = "";
+          if(isset($_GET["search"])) $search = "?search=".$_GET["search"];
+          ?>
+          <li class="page-item <?php if($page == 0) echo "disabled"; ?>">
+            <a class="page-link" href="/page/<?php echo $oldpage.$search; ?>">&larr; Recenti</a>
           </li>
           <li class="page-item">
-            <a class="page-link" href="#">Vecchi &rarr;</a>
+            <a class="page-link" href="/page/<?php echo ($page + 1).$search; ?>">Vecchi &rarr;</a>
           </li>
         </ul>
 
@@ -87,30 +119,38 @@
         <div class="card my-4">
           <h5 class="card-header">Cerca</h5>
           <div class="card-body">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Ricerca...">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Cerca!</button>
-              </span>
-            </div>
+            <form method="GET" action="/">
+              <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="Ricerca...">
+                <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="submit">Cerca!</button>
+                </span>
+              </div>
+            </form>
           </div>
         </div>
-
+        <?php if($permission === null): ?>
         <!-- Side Widget -->
         <div class="card my-4">
           <h5 class="card-header">Accedi</h5>
           <div class="card-body">
             <div class="tab-content" id="tabs">
               <div class="tab-pane fade show active" id="login" role="tabpanel">
-                <form>
+                <form method="POST" action="/login">
                   <div class="form-group">
                     <label for="email">Indirizzo email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Email">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                   </div>
                   <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                   </div>
+                  <?php if(isset($_SESSION["error"])): ?>
+                  <div class="alert alert-danger" role="alert">
+                    <?php echo $_SESSION["error"]; ?>
+                    <?php unset($_SESSION["error"]); ?>
+                  </div>
+                  <?php endif; ?>
                   <div class="text-center">
                     <button type="submit" class="btn btn-secondary">Accedi</button>
                     <br>
@@ -137,18 +177,22 @@
             </div>
           </div>
         </div>
+        
+        <?php else: ?>
 
         <div class="card my-4">
           <h5 class="card-header">Accesso eseguito</h5>
           <div class="card-body">
-            Bevenuto Filippo Finke!
+            Bevenuto <b><?php echo $_SESSION["user"]["full_name"] ?? "full_name"; ?></b>
             <br>
             <br>
             <div class="text-center">
-              <button class="btn btn-secondary">Pubblica un articolo</button>
+              <button class="btn btn-secondary" data-toggle="modal" data-target="#addArticle">Pubblica un articolo</button>
             </div>
           </div>
         </div>
+
+        <?php endif; ?>
 
       </div>
 
@@ -194,9 +238,36 @@
     </div>
   </div>
 
+  <div class="modal fade" id="addArticle" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Pubblica un articolo</h5>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <input type="text" class="form-control" id="title" placeholder="Titolo">
+            </div>
+            <div class="form-group">
+              <label for="image">Sfondo</label>
+              <input type="file" class="form-control-file" id="image">
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" id="content" rows="10" placeholder="Contenuto"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary">Imposta password</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
 <script>
