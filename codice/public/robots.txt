@@ -1,0 +1,4 @@
+# Regola da applicare a tutti i robot
+User-agent: *
+# Non fare accedere alle pagine di amministrazione
+Disallow: /admin/
