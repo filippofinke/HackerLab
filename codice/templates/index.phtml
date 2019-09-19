@@ -151,6 +151,13 @@
                     <?php unset($_SESSION["error"]); ?>
                   </div>
                   <?php endif; ?>
+
+                  <?php if(isset($_SESSION["success"])): ?>
+                    <div class="alert alert-success" role="alert">
+                      <?php echo $_SESSION["success"]; ?>
+                      <?php unset($_SESSION["success"]); ?>
+                    </div>
+                  <?php endif; ?>
                   <div class="text-center">
                     <button type="submit" class="btn btn-secondary">Accedi</button>
                     <br>
@@ -162,10 +169,10 @@
                 </form>
               </div>
               <div class="tab-pane fade" id="forgot-password" role="tabpanel">
-                <form>
+                <form action="/reset" method="POST">
                   <div class="form-group">
                     <label for="email_reset">Indirizzo email</label>
-                    <input type="email" class="form-control" id="email_reset" placeholder="Email">
+                    <input type="email" class="form-control" name="email" placeholder="Email">
                   </div>
                   <div class="text-center">
                     <button type="submit" class="btn btn-secondary">Recupera la password</button>

@@ -17,6 +17,29 @@ class Users {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function generateResetToken($email) {
+        
+        if(self::getByEmail($email)) {
+            $reset_token = base64_encode(time());
+            $query = Database::get()->prepare("UPDATE users SET reset_token = :reset_token WHERE email = :email");
+            $query->bindParam(":reset_token", $reset_token);
+            $query->bindParam(":email", $email);
+            $query->execute();
+            if(!$query) {
+                $_SESSION["error"] = "Impossibile resettare la password!";
+                return false;
+            }
+            /**
+             * TODO SEND EMAIL
+             */
+            $_SESSION["success"] = "Email di recupero inviata!";
+            return true;
+        }
+        $_SESSION["error"] = "Account inesistente!";
+        return false;
+    
+    }
+
     public static function login($email, $password) {
         $user = self::getByEmail($email);
         if($user) {

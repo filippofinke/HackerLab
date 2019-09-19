@@ -29,6 +29,12 @@ return function (App $app) {
         return $response->withRedirect("/", 302);
     });
 
+    $app->post('/reset', function (Request $request, Response $response, array $args) use ($app) {
+        $email = $request->getParam('email');
+        Users::generateResetToken($email);
+        return $response->withRedirect("/", 302);
+    });
+
     $app->post('/login', function (Request $request, Response $response, array $args) use ($app) {
         $email = $request->getParam('email');
         $password = $request->getParam('password');
