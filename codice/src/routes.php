@@ -59,7 +59,7 @@ return function (App $app) {
         $password = $request->getParam('password');
         $repeat_password = $request->getParam('repeat_password');
         Users::register($full_name, $email, $password, $repeat_password);
-        return $response->withRedirect("/", 302);
+        return $response->withRedirect("/register", 302);
     });
 
     /**
