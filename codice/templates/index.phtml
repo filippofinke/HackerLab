@@ -279,7 +279,7 @@
 </body>
 <script>
 let params = new URLSearchParams(window.location.search);
-let token = params.get('reset_password');
+let token = params.get('reset_token');
 if(token != null) {
   $("#reset_token").val(token);
   $("#resetModal").modal({backdrop: 'static', keyboard: false});

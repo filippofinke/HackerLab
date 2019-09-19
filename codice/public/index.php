@@ -39,6 +39,7 @@ class Database {
 
 }
 Database::connect($settings["database"]);
+require __DIR__ . '/../src/mailer.php';
 require __DIR__ . '/../src/models/users.php';
 require __DIR__ . '/../src/models/articles.php';
 require __DIR__ . '/../src/models/comments.php';

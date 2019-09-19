@@ -32,6 +32,7 @@ return function (App $app) {
     $app->post('/reset', function (Request $request, Response $response, array $args) use ($app) {
         $email = $request->getParam('email');
         Users::generateResetToken($email);
+        exit;
         return $response->withRedirect("/", 302);
     });
 

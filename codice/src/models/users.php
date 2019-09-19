@@ -18,8 +18,8 @@ class Users {
     }
 
     public static function generateResetToken($email) {
-        
-        if(self::getByEmail($email)) {
+        $user = self::getByEmail($email);
+        if($user) {
             $reset_token = base64_encode(time());
             $query = Database::get()->prepare("UPDATE users SET reset_token = :reset_token WHERE email = :email");
             $query->bindParam(":reset_token", $reset_token);
@@ -29,11 +29,14 @@ class Users {
                 $_SESSION["error"] = "Impossibile resettare la password!";
                 return false;
             }
-            /**
-             * TODO SEND EMAIL
-             */
-            $_SESSION["success"] = "Email di recupero inviata!";
-            return true;
+            $message = "Recupera la tua password premendo il seguente link:\nhttp://127.0.0.1/?reset_token=".$reset_token;
+            if(Mailer::send($email, $user["full_name"], "Conferma account", $message)) {
+                $_SESSION["success"] = "Email di recupero inviata!";
+                return true;
+            } else {
+                $_SESSION["error"] = "Impossibile resettare la password!";
+                return false;
+            }
         }
         $_SESSION["error"] = "Account inesistente!";
         return false;
