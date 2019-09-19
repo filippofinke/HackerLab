@@ -223,24 +223,28 @@
         <div class="modal-header">
           <h5 class="modal-title">Imposta la tua password</h5>
         </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <input type="text" class="form-control" id="reset_token" disabled>
-            </div>
-            <div class="form-group">
-              <label for="reset_password">Password</label>
-              <input type="password" class="form-control" id="reset_password" placeholder="Password">
-            </div>
-            <div class="form-group">
-              <label for="reset_password_repeat">Ripeti password</label>
-              <input type="password" class="form-control" id="reset_password_repeat" placeholder="Password">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary">Imposta password</button>
-        </div>
+        <form action="/reset_password" method="POST">
+          <div class="modal-body">
+              <div class="form-group">
+                <label for="reset_password">Password</label>
+                <input type="hidden" class="form-control" id="reset_token" name="reset_token">
+                <input type="password" class="form-control" name="password" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <label for="reset_password_repeat">Ripeti password</label>
+                <input type="password" class="form-control" name="repeat_password" placeholder="Password">
+              </div>
+              <?php if(isset($_SESSION["reset_password"])): ?>
+              <div class="alert alert-danger" role="alert">
+                <?php echo $_SESSION["reset_password"]; ?>
+                <?php unset($_SESSION["reset_password"]); ?>
+              </div>
+              <?php endif; ?>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-secondary">Imposta password</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

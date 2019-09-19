@@ -17,10 +17,45 @@ class Users {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function resetPassword($reset_token, $password, $repeat_password) {
+        if(strlen($password) < 4) {
+            $_SESSION["reset_password"] = "La password deve avere almeno 4 caratteri!";
+            return false;
+        }
+        if($password != $repeat_password) {
+            $_SESSION["reset_password"] = "Le due password non corrispondono!";
+            return false;
+        }
+        $query = Database::get()->prepare("SELECT * FROM users WHERE reset_token = :reset_token");
+        $query->bindParam(":reset_token", $reset_token);
+        $query->execute();
+        $user = $query->fetch(PDO::FETCH_ASSOC);
+        if($user) {
+            $query = Database::get()->prepare("UPDATE users SET password = :password, reset_token = null WHERE reset_token = :reset_token");
+            $query->bindParam(":password", password_hash($password, PASSWORD_DEFAULT));
+            $query->bindParam(":reset_token", $reset_token, PDO::PARAM_STR);
+            $query->execute();
+            if(!$query) {
+                $_SESSION["reset_password"] = "Impossibile impostare la password!";
+                return false;
+            }
+            $_SESSION["success"] = "Password impostata con successo!";
+            return true;
+        } else {
+            $_SESSION["reset_password"] = "Codice di recupero invalido!";
+            return false;
+        }
+    }
+
     public static function generateResetToken($email) {
         $user = self::getByEmail($email);
         if($user) {
+
+            /**
+             * VULNERABILE!
+             */
             $reset_token = base64_encode(time());
+
             $query = Database::get()->prepare("UPDATE users SET reset_token = :reset_token WHERE email = :email");
             $query->bindParam(":reset_token", $reset_token);
             $query->bindParam(":email", $email);
@@ -29,8 +64,8 @@ class Users {
                 $_SESSION["error"] = "Impossibile resettare la password!";
                 return false;
             }
-            $message = "Recupera la tua password premendo il seguente link:\nhttp://127.0.0.1/?reset_token=".$reset_token;
-            if(Mailer::send($email, $user["full_name"], "Conferma account", $message)) {
+            $message = "Recupera la tua password premendo il seguente link:\nhttp://127.0.0.1/?reset_token=".urlencode($reset_token);
+            if(Mailer::send($email, $user["full_name"], "Recupera password", $message)) {
                 $_SESSION["success"] = "Email di recupero inviata!";
                 return true;
             } else {
@@ -50,6 +85,9 @@ class Users {
                 $_SESSION["error"] = "Account disabilitato!";
                 return false;
             } else if(password_verify($password, $user["password"])) {
+                /**
+                 * VULNERABILE!
+                 */
                 setcookie('permission', base64_encode($user["permission"]));
                 $_SESSION["user"] = array(
                     'id' => $user["id"],

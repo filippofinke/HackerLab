@@ -32,7 +32,6 @@ return function (App $app) {
     $app->post('/reset', function (Request $request, Response $response, array $args) use ($app) {
         $email = $request->getParam('email');
         Users::generateResetToken($email);
-        exit;
         return $response->withRedirect("/", 302);
     });
 
@@ -41,6 +40,17 @@ return function (App $app) {
         $password = $request->getParam('password');
         Users::login($email, $password);
         return $response->withRedirect("/", 302);
+    });
+
+    $app->post('/reset_password', function (Request $request, Response $response, array $args) use ($app) {
+        $reset_token = $request->getParam('reset_token');
+        $password = $request->getParam('password');
+        $repeat_password = $request->getParam('repeat_password');
+        if(!Users::resetPassword($reset_token, $password, $repeat_password)) {
+            return $response->withRedirect("/?reset_token=".$reset_token,302);
+        } else {
+            return $response->withRedirect("/",302);
+        }
     });
 
     $app->post('/register', function (Request $request, Response $response, array $args) use ($app) {
