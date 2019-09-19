@@ -40,8 +40,8 @@
               Pannello di amministrazione
             </a>
             <div class="dropdown-menu" aria-labelledby="dropDown">
-              <a class="dropdown-item" href="/admin/articoli">Articoli</a>
-              <a class="dropdown-item" href="/admin/utenti">Utenti</a>
+              <a class="dropdown-item" href="/admin/articles">Articoli</a>
+              <a class="dropdown-item" href="/admin/users">Utenti</a>
             </div>
           </li>
           <?php endif; ?>
@@ -67,7 +67,7 @@
         <!-- Author -->
         <p class="lead">
           di
-          <a href="/profile/<?php echo $post["user_id"]; ?>"><?php echo $post["full_name"]; ?></a>
+          <a href="/profile/<?php echo $post["user_id"]; ?>"><?php echo $post["full_name"] ?? "eliminato"; ?></a>
         </p>
 
         <hr>
@@ -115,7 +115,7 @@
           <img style="max-width: 50px;" class="d-flex mr-3 rounded-circle" src="/images/user.png">
           <div class="media-body">
             <h5 class="mt-0">
-              <a href="/profile/<?php echo $comment["user_id"]; ?>"> <?php echo $comment["full_name"]; ?></a>
+              <a href="/profile/<?php echo $comment["user_id"]; ?>"> <?php echo $comment["full_name"] ?? "eliminato"; ?></a>
               <small><?php echo date("d.m.y", strtotime($comment["created_at"])); ?></small>
             </h5>
             <?php echo $comment["comment"]; ?>

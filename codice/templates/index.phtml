@@ -46,8 +46,8 @@
               Pannello di amministrazione
             </a>
             <div class="dropdown-menu" aria-labelledby="dropDown">
-              <a class="dropdown-item" href="/admin/articoli">Articoli</a>
-              <a class="dropdown-item" href="/admin/utenti">Utenti</a>
+              <a class="dropdown-item" href="/admin/articles">Articoli</a>
+              <a class="dropdown-item" href="/admin/users">Utenti</a>
             </div>
           </li>
           <?php endif; ?>
@@ -89,7 +89,7 @@
           </div>
           <div class="card-footer text-muted">
             Pubblicato il <?php echo date("d.m.Y", strtotime($article["created_at"])); ?> da
-            <a href="/profile/<?php echo $article["user_id"]; ?>"><?php echo $article["full_name"]; ?></a>
+            <a href="/profile/<?php echo $article["user_id"]; ?>"><?php echo $article["full_name"] ?? "eliminato"; ?></a>
           </div>
         </div>
         <?php endforeach; ?>
