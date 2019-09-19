@@ -31,20 +31,8 @@
           <li class="nav-item">
             <a class="nav-link" href="/">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/profile">Profilo</a>
-          </li>
           <li class="nav-item active">
             <a class="nav-link" href="/register">Registrati</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
-              Pannello di amministrazione
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropDown">
-              <a class="dropdown-item" href="/admin/articoli">Articoli</a>
-              <a class="dropdown-item" href="/admin/utenti">Utenti</a>
-            </div>
           </li>
         </ul>
       </div>
@@ -60,25 +48,31 @@
         <div class="card-body">
           <h3>HackerLab - Registrati</h3>
           <hr>
-          <form>
+          <form action="/register" method="post">
             <div class="form-group">
               <label for="full_name">Nome e cognome</label>
-              <input type="text" class="form-control" id="full_name" placeholder="Nome e cognome">
+              <input type="text" class="form-control" name="full_name" placeholder="Nome e cognome">
               <small class="form-text text-muted">Verrà mostrato ad altri utenti.</small>
             </div>
             <div class="form-group">
               <label for="email">Indirizzo email</label>
-              <input type="email" class="form-control" id="email" placeholder="Email">
+              <input type="email" class="form-control" name="email" placeholder="Email">
             </div>
             <div class="form-group">
               <label for="password">Password</label>
-              <input type="password" class="form-control" id="password" placeholder="Password">
+              <input type="password" class="form-control" name="password" placeholder="Password">
             </div>
             <div class="form-group">
               <label for="repeat_password">Ripeti la password</label>
-              <input type="password" class="form-control" id="repeat_password" placeholder="Ripeti la password">
+              <input type="password" class="form-control" name="repeat_password" placeholder="Ripeti la password">
             </div>
-            <button type="submit" class="btn btn-primary">Registrati</button>
+            <?php if(isset($_SESSION["error"])): ?>
+              <div class="alert alert-danger" role="alert">
+                <?php echo $_SESSION["error"]; ?>
+                <?php unset($_SESSION["error"]); ?>
+              </div>
+            <?php endif; ?>
+            <button type="submit" class="btn btn-primary">Crea un account</button>
           </form>        
         </div>
       </div>

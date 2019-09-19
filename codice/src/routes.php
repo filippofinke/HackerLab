@@ -6,10 +6,12 @@ use Slim\Http\Response;
 
 return function (App $app) {
 
-
+    /**
+     * Funzioni di aiuto.
+     */
     $login_middleware = function ($request, $response, $next) {
         if (!isset($_SESSION["user"])) {
-            $_SESSION["big_error"] = "Per eseguire questa azione devi accedere!";
+            $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso!";
             return $response->withRedirect("/", 302);
         }
         $response = $next($request, $response);
@@ -17,7 +19,7 @@ return function (App $app) {
     };
 
     /**
-     * Chiamate
+     * Chiamate dirette.
      */
 
     $app->get('/logout', function (Request $request, Response $response, array $args) use ($app) {
@@ -34,8 +36,17 @@ return function (App $app) {
         return $response->withRedirect("/", 302);
     });
 
+    $app->post('/register', function (Request $request, Response $response, array $args) use ($app) {
+        $full_name = $request->getParam('full_name');
+        $email = $request->getParam('email');
+        $password = $request->getParam('password');
+        $repeat_password = $request->getParam('repeat_password');
+        Users::register($full_name, $email, $password, $repeat_password);
+        return $response->withRedirect("/", 302);
+    });
+
     /**
-     * Pagine
+     * Pagine senza autenticazione.
      */
     $app->get('/[page/{page}]', function (Request $request, Response $response, array $args) use ($app) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
@@ -62,7 +73,7 @@ return function (App $app) {
     });
 
     /**
-     * Pagine che richiedono l'accesso.
+     * Pagine con autenticazione.
      */
     $app->get('/profile[/{user_id}]', function (Request $request, Response $response, array $args) use ($app) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
