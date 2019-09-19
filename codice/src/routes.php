@@ -68,6 +68,7 @@ return function (App $app) {
     $app->get('/[page/{page}]', function (Request $request, Response $response, array $args) use ($app) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
         $page = $args["page"] ?? 0;
+        if(!is_numeric($page)) $page = 0;
         $articles = [];
         if($request->getParam('search') !== null) {
             $articles = Articles::search($request->getParam('search'), $page);
