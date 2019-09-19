@@ -9,6 +9,20 @@ return function (App $app) {
     /**
      * Funzioni di aiuto.
      */
+
+    $admin_middleware = function ($request, $response, $next) {
+        if (!isset($_SESSION["user"])) {
+            $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso!";
+            return $response->withRedirect("/", 302);
+        }
+        if($_SESSION["user"]["permission"] != "administrator") {
+            $_SESSION["big_error"] = "Non hai i permessi per accedere a questa pagina!";
+            return $response->withRedirect("/", 302);
+        }
+        $response = $next($request, $response);
+        return $response;
+    };
+
     $login_middleware = function ($request, $response, $next) {
         if (!isset($_SESSION["user"])) {
             $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso!";
@@ -61,6 +75,11 @@ return function (App $app) {
         Users::register($full_name, $email, $password, $repeat_password);
         return $response->withRedirect("/register", 302);
     });
+
+    $app->get('/users/delete/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
+        Users::delete($args["user_id"]);
+        return $response->withRedirect("/admin/users", 302);
+    })->add($admin_middleware);
 
     /**
      * Pagine senza autenticazione.
@@ -137,12 +156,14 @@ return function (App $app) {
         return $response->withRedirect("/", 302);
     })->add($login_middleware);
 
-    $app->get('/admin/articoli', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/admin/articles', function (Request $request, Response $response, array $args) use ($app) {
         $this->view->render($response, "admin/articoli.phtml", $args);
-    });
+    })->add($admin_middleware);
 
-    $app->get('/admin/utenti', function (Request $request, Response $response, array $args) use ($app) {
-        $this->view->render($response, "admin/utenti.phtml", $args);
-    });
+    $app->get('/admin/users', function (Request $request, Response $response, array $args) use ($app) {
+        $this->view->render($response, "admin/utenti.phtml", array(
+            'users' => Users::get()
+        ));
+    })->add($admin_middleware);
 
 };

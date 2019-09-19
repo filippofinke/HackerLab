@@ -2,6 +2,11 @@
 
 class Users {
 
+    public static function get() {
+        $query = Database::get()->prepare("SELECT * FROM users ORDER BY permission ASC, full_name ASC");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public static function getById($user_id) {
         $query = Database::get()->prepare("SELECT * FROM users WHERE id = :user_id");
@@ -15,6 +20,22 @@ class Users {
         $query->bindParam(":email", $email);
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function delete($user_id) {
+        if($user_id == $_SESSION["user"]["id"]) {
+            $_SESSION["error"] = "Non puoi eliminare l'utente corrente!";
+            return false;
+        }
+        $query = Database::get()->prepare("DELETE FROM users WHERE id = :user_id");
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        if(!$query) {
+            $_SESSION["error"] = "Impossibile eliminare l'utente!";
+            return false;
+        }
+        $_SESSION["success"] = "Utente eliminato!";
+        return true;
     }
 
     public static function resetPassword($reset_token, $password, $repeat_password) {
@@ -92,7 +113,8 @@ class Users {
                 $_SESSION["user"] = array(
                     'id' => $user["id"],
                     'email' => $user["email"],
-                    'full_name' => $user["full_name"]
+                    'full_name' => $user["full_name"],
+                    'permission' => $user["permission"]
                 );
                 return true;
             }

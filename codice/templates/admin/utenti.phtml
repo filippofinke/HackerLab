@@ -34,17 +34,17 @@
           <li class="nav-item">
             <a class="nav-link" href="/profile">Profilo</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Registrati</a>
-          </li>
           <li class="nav-item dropdown active">
             <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
               Pannello di amministrazione
             </a>
             <div class="dropdown-menu" aria-labelledby="dropDown">
-              <a class="dropdown-item" href="/admin/articoli">Articoli</a>
-              <a class="dropdown-item" href="/admin/utenti">Utenti</a>
+              <a class="dropdown-item" href="/admin/articles">Articoli</a>
+              <a class="dropdown-item" href="/admin/users">Utenti</a>
             </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Esci</a>
           </li>
         </ul>
       </div>
@@ -61,19 +61,34 @@
 
         <h1 class="my-4">Gestione utenti</h1>
 
-        <!-- Blog Post -->
+        <?php if(isset($_SESSION["error"])): ?>
+        <div class="alert alert-danger" role="alert">
+          <?php echo $_SESSION["error"]; ?>
+          <?php unset($_SESSION["error"]); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if(isset($_SESSION["success"])): ?>
+        <div class="alert alert-success" role="alert">
+          <?php echo $_SESSION["success"]; ?>
+          <?php unset($_SESSION["success"]); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php foreach($users as $user): ?>
         <div class="card mb-4">
           <div class="card-body">
             <h2 class="card-title">
-              Filippo Finke
-              <a href="/profile" class="btn btn-primary float-right">Pagina profilo &rarr;</a>
+              <?php echo $user["full_name"]; ?>
+              <a href="/profile/<?php echo $user["id"]; ?>" class="btn btn-primary float-right">Pagina profilo &rarr;</a>
             </h2>
-            filippo.finke@samtrevano.ch
+            <?php echo $user["email"]; ?>
             <br>
-            <b>user</b>
-            <a href="/delete" class="btn btn-danger float-right">Elimina</a>
+            <b><?php echo $user["permission"]; ?></b>
+            <a onclick="deleteUser(<?php echo $user["id"]; ?>);" class="btn btn-danger float-right text-white">Elimina</a>
           </div>
         </div>
+        <?php endforeach; ?>
 
       </div>
 
@@ -94,6 +109,14 @@
   <!-- Bootstrap core JavaScript -->
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+  function deleteUser(id) {
+    var path = "/users/delete/" + id;
+    if(confirm("Sei sicuro di voler eliminare questo utente?")) {
+      window.location.href = path;
+    }
+  }
+  </script>
 
 </body>
 </html>
