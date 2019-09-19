@@ -67,7 +67,9 @@
             <small><?php echo $user["email"]; ?></small>
           <?php endif; ?>
         </h1>
-
+        <?php if(count($articles) == 0): ?>
+        <h4>Nessun articolo.</h4>
+        <?php endif; ?>
         <?php foreach($articles as $article): ?>
         <div class="card mb-4">
           <img class="card-img-top" src="<?php echo $article["image"]; ?>">
