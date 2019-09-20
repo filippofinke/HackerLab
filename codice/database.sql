@@ -63,7 +63,7 @@ INSERT INTO permissions VALUES('administrator');
 
 # Utenti predefiniti
 INSERT INTO users VALUES(null,'admin@hackerlab.ch', '$2y$10$GBiarCslujuL/bqweq9HXOuunR4c/GAIebIfmEQ1F41JCeJyLLAYO', 'administrator', 'Administrator', NULL, 1); # Password: PasswordSegreta
-INSERT INTO users VALUES(null,'filippo@finke.ch', '$2y$10$vh5dNYlbNzhOuuq4GjtZ2.Vl6xTYq94yxeJWfbGYGalNoNiOMEdUS', 'user', 'Filippo Finke', NULL, 1); # Password: 1234
+INSERT INTO users VALUES(null,'filippo.finke@samtrevano.ch', '$2y$10$vh5dNYlbNzhOuuq4GjtZ2.Vl6xTYq94yxeJWfbGYGalNoNiOMEdUS', 'user', 'Filippo Finke', NULL, 1); # Password: 1234
 
 # Articoli predefiniti
 INSERT INTO articles VALUES(null, 1, 'Come installare Windows10', NULL, '<h1>Windows10</h1>Per eseguire un installazione di Windows10 ti serviranno le seguenti...<ul><li>Test</li></ul><a href="#">Test</a>', CURRENT_TIMESTAMP);
