@@ -176,8 +176,24 @@ return function (App $app) {
 
     })->add($login_middleware);
 
-    $app->get('/admin/articles', function (Request $request, Response $response, array $args) use ($app) {
-        $this->view->render($response, "admin/articoli.phtml", $args);
+    $app->get('/admin/articles[/{page}]', function (Request $request, Response $response, array $args) use ($app) {
+        $page = $args["page"] ?? 0;
+        if(!is_numeric($page)) $page = 0;
+
+        $articles = Articles::get($page);
+        if(count($articles) == 0 && $page != 0) {
+            return $response->withRedirect("/admin/articles/".($page - 1), 302);
+        }
+
+        $this->view->render($response, "admin/articoli.phtml", array(
+            'page' => $page,
+            'articles' => $articles
+        ));
+    })->add($admin_middleware);
+
+    $app->get('/articles/delete/{article_id}', function (Request $request, Response $response, array $args) use ($app) {
+        Articles::delete($args["article_id"]);
+        return $response->withRedirect("/admin/articles", 302);
     })->add($admin_middleware);
 
     $app->get('/admin/users', function (Request $request, Response $response, array $args) use ($app) {

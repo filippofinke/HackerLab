@@ -76,6 +76,23 @@ class Articles {
         return true;
     }
 
+    public static function delete($article_id) {
+        $article = self::getById($article_id);
+        if ($article) {
+            $query = Database::get()->prepare("DELETE FROM articles WHERE id = :article_id");
+            $query->bindParam(":article_id", $article_id);
+            $query->execute();
+            if (!$query) {
+                $_SESSION["error"] = "Impossibile eliminare l'articolo!";
+                return false;
+            }
+            unlink(__DIR__.'/../../storage/'.$article["image"]);
+            $_SESSION["success"] = "Articolo eliminato!";
+            return true;
+        }
+        return false;
+    }
+
 }
 
 ?>

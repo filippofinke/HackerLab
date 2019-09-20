@@ -61,30 +61,51 @@
 
         <h1 class="my-4">Gestione articoli</h1>
 
+        <?php if(isset($_SESSION["error"])): ?>
+        <div class="alert alert-danger" role="alert">
+          <?php echo $_SESSION["error"]; ?>
+          <?php unset($_SESSION["error"]); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if(isset($_SESSION["success"])): ?>
+        <div class="alert alert-success" role="alert">
+          <?php echo $_SESSION["success"]; ?>
+          <?php unset($_SESSION["success"]); ?>
+        </div>
+        <?php endif; ?>
+
         <!-- Blog Post -->
+        <?php foreach($articles as $article): ?>
         <div class="card mb-4">
-          <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/it/5/51/Windows_10_1903_Desktop.png">
+          <?php if($article["image"] != null): ?>
+          <img class="card-img-top" src="/image/?file_name=<?php echo $article["image"]; ?>">
+          <?php endif; ?>
           <div class="card-body">
-            <h2 class="card-title">Come installare Windows10</h2>
-            <a href="/post" class="btn btn-primary">Vai all'articolo &rarr;</a>
-            <a href="/delete" class="btn btn-danger float-right">Elimina</a>
+            <h2 class="card-title"><?php echo $article["title"]; ?></h2>
+            <a href="/post/<?php echo $article["id"]; ?>" class="btn btn-primary">Vai all'articolo &rarr;</a>
+            <a onclick="deleteArticle(<?php echo $article["id"]; ?>);" class="btn btn-danger float-right text-white">Elimina</a>
           </div>
           <div class="card-footer text-muted">
-            Pubblicato il 1 gennaio 2019 da
-            <a href="/profile">Filippo Finke</a>
+            Pubblicato il <?php echo date("d.m.Y", strtotime($article["created_at"])); ?> da
+            <a href="/profile/<?php echo $article["user_id"]; ?>"><?php echo $article["full_name"] ?? "eliminato"; ?></a>
           </div>
         </div>
+        <?php endforeach; ?>
 
         <!-- Pagination -->
         <ul class="pagination justify-content-center mb-4">
-          <li class="page-item disabled">
-            <a class="page-link" href="#">&larr; Recenti</a>
+          <?php 
+          $oldpage = $page - 1;
+          if($oldpage < 0) $oldpage = 0;
+          ?>
+          <li class="page-item <?php if($page == 0) echo "disabled"; ?>">
+            <a class="page-link" href="/admin/articles/<?php echo $oldpage.$search; ?>">&larr; Recenti</a>
           </li>
           <li class="page-item">
-            <a class="page-link" href="#">Vecchi &rarr;</a>
+            <a class="page-link" href="/admin/articles/<?php echo ($page + 1).$search; ?>">Vecchi &rarr;</a>
           </li>
         </ul>
-
       </div>
 
     </div>
@@ -104,6 +125,13 @@
   <!-- Bootstrap core JavaScript -->
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+  <script>
+  function deleteArticle(id) {
+    var path = "/articles/delete/" + id;
+    if(confirm("Sei sicuro di voler eliminare questo articolo?")) {
+      window.location.href = path;
+    }
+  }
+  </script>
 </body>
 </html>

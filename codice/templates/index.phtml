@@ -82,6 +82,14 @@
         </div>
         <?php endif; ?>
 
+        <?php if(count($articles) == 0): ?>
+        <div class="text-center">
+            <h4>Non è presente nessun articolo.</h4>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addArticle">Contribuisci a HackerLab</button>
+        </div>
+        <br>
+        <?php endif;?>
+
         <?php foreach($articles as $article): ?>
         <div class="card mb-4">
           <?php if($article["image"] != null): ?>
