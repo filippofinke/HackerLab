@@ -1,2 +1,4 @@
 /codice/vendor/*
 /codice/composer.lock
+/codice/storage/*
+!/codice/storage/.gitkeep
