@@ -80,7 +80,7 @@
         <!-- Preview Image -->
         <?php if($post["image"] != null): ?>
         <div class="text-center">
-          <img style="max-height: 300px;" src="/image/?file_name=<?php echo $post["image"]; ?>">
+          <img style="max-width: 100%;" src="/image/?file_name=<?php echo $post["image"]; ?>">
         </div>
         <hr>
         <?php endif; ?>
@@ -95,7 +95,7 @@
 
         <!-- Comments Form -->
         <div class="card my-4">
-          <h5 class="card-header">Lascia un commento: </h5>
+          <h5 class="card-header">Lascia un commento</h5>
           <div class="card-body">
             <form method="POST">
               <div class="form-group">
