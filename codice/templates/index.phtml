@@ -69,6 +69,8 @@
       <div class="col-md-8">
         <?php if(isset($_GET["search"]) && $_GET["search"] != ""): ?>
         <h1 class="my-4">Ricerca per <?php echo htmlspecialchars($_GET["search"]); ?></h1>
+        <?php elseif(isset($page) && $page != 0): ?>
+        <h1 class="my-4">Pagina <?php echo $page; ?></h1>
         <?php else: ?>
         <h1 class="my-4">Ultimi articoli</h1>
         <?php endif; ?>
@@ -82,7 +84,9 @@
 
         <?php foreach($articles as $article): ?>
         <div class="card mb-4">
-          <img class="card-img-top" src="<?php echo $article["image"]; ?>">
+          <?php if($article["image"] != null): ?>
+          <img class="card-img-top" src="/image/?file_name=<?php echo $article["image"]; ?>">
+          <?php endif; ?>
           <div class="card-body">
             <h2 class="card-title"><?php echo $article["title"]; ?></h2>
             <a href="/post/<?php echo $article["id"]; ?>" class="btn btn-primary">Vai all'articolo &rarr;</a>
@@ -255,23 +259,30 @@
         <div class="modal-header">
           <h5 class="modal-title">Pubblica un articolo</h5>
         </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <input type="text" class="form-control" id="title" placeholder="Titolo">
+        <form action="/post" method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+              <div class="form-group">
+                <input type="text" class="form-control" name="title" placeholder="Titolo">
+              </div>
+              <div class="form-group">
+                <label for="image">Sfondo</label>
+                <input type="file" class="form-control-file" name="image">
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" name="content" rows="10" placeholder="Contenuto"></textarea>
+                <code>Sono permessi i tag html: h1, ul, li, a, br</code>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <?php if(isset($_SESSION["article_error"])): ?>
+            <div class="alert alert-danger" role="alert">
+              <?php echo $_SESSION["article_error"]; ?>
+              <?php unset($_SESSION["article_error"]); ?>
             </div>
-            <div class="form-group">
-              <label for="image">Sfondo</label>
-              <input type="file" class="form-control-file" id="image">
-            </div>
-            <div class="form-group">
-              <textarea class="form-control" id="content" rows="10" placeholder="Contenuto"></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary">Imposta password</button>
-        </div>
+            <?php endif; ?>
+            <button type="submit" class="btn btn-secondary">Pubblica</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -287,6 +298,9 @@ let token = params.get('reset_token');
 if(token != null) {
   $("#reset_token").val(token);
   $("#resetModal").modal({backdrop: 'static', keyboard: false});
+}
+if(params.get('publish_article') != null) {
+  $("#addArticle").modal('toggle');
 }
 </script>
 </html>

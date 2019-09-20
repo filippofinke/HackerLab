@@ -72,7 +72,9 @@
         <?php endif; ?>
         <?php foreach($articles as $article): ?>
         <div class="card mb-4">
-          <img class="card-img-top" src="<?php echo $article["image"]; ?>">
+          <?php if($article["image"] != null): ?>
+          <img class="card-img-top" src="/image/?file_name=<?php echo $article["image"]; ?>">
+          <?php endif; ?>          
           <div class="card-body">
             <h2 class="card-title"><?php echo $article["title"]; ?></h2>
             <a href="/post/<?php echo $article["id"]; ?>" class="btn btn-primary">Vai all'articolo &rarr;</a>

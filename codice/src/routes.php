@@ -36,6 +36,18 @@ return function (App $app) {
      * Chiamate dirette.
      */
 
+    $app->get('/image/', function (Request $request, Response $response, array $args) use ($app) {
+        $file_name = $request->getParam('file_name');
+        $file_path = __DIR__.'/../storage/'.$file_name;
+        if (file_exists($file_path)) {
+            $content = file_get_contents($file_path);
+            $response->write($content);
+            return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
+        }
+        $response = new \Slim\Http\Response(404);
+        return $response->write("Immagine inesistente.");
+    });
+
     $app->get('/logout', function (Request $request, Response $response, array $args) use ($app) {
         unset($_SESSION["user"]);
         session_destroy();
@@ -75,11 +87,6 @@ return function (App $app) {
         Users::register($full_name, $email, $password, $repeat_password);
         return $response->withRedirect("/register", 302);
     });
-
-    $app->get('/users/delete/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
-        Users::delete($args["user_id"]);
-        return $response->withRedirect("/admin/users", 302);
-    })->add($admin_middleware);
 
     /**
      * Pagine senza autenticazione.
@@ -156,6 +163,19 @@ return function (App $app) {
         return $response->withRedirect("/", 302);
     })->add($login_middleware);
 
+    $app->post('/post', function (Request $request, Response $response, array $args) use ($app) {
+        
+        $title = $request->getParam('title');
+        $content = $request->getParam('content');
+        $image = null;
+        if(isset($_FILES['image']) && $_FILES['image']['name'] != "") $image = $_FILES['image'];
+        if(!Articles::insert($_SESSION["user"]["id"], $title, $image, $content)) {
+            return $response->withRedirect("/?publish_article=true", 302);
+        }
+        return $response->withRedirect("/", 302);
+
+    })->add($login_middleware);
+
     $app->get('/admin/articles', function (Request $request, Response $response, array $args) use ($app) {
         $this->view->render($response, "admin/articoli.phtml", $args);
     })->add($admin_middleware);
@@ -164,6 +184,11 @@ return function (App $app) {
         $this->view->render($response, "admin/utenti.phtml", array(
             'users' => Users::get()
         ));
+    })->add($admin_middleware);
+
+    $app->get('/users/delete/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
+        Users::delete($args["user_id"]);
+        return $response->withRedirect("/admin/users", 302);
     })->add($admin_middleware);
 
 };
