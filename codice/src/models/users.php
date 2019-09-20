@@ -85,7 +85,7 @@ class Users {
                 $_SESSION["error"] = "Impossibile resettare la password!";
                 return false;
             }
-            $message = "Recupera la tua password premendo il seguente link:\nhttp://127.0.0.1/?reset_token=".urlencode($reset_token);
+            $message = "Recupera la tua password premendo il seguente link:<br>http://hackerlab.ch/?reset_token=".urlencode($reset_token);
             if(Mailer::send($email, $user["full_name"], "Recupera password", $message)) {
                 $_SESSION["success"] = "Email di recupero inviata!";
                 return true;

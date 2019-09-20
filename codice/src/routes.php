@@ -36,6 +36,9 @@ return function (App $app) {
      * Chiamate dirette.
      */
 
+     /**
+      * VULNERABILE!
+      */
     $app->get('/image/', function (Request $request, Response $response, array $args) use ($app) {
         $file_name = $request->getParam('file_name');
         $file_path = __DIR__.'/../storage/'.$file_name;
