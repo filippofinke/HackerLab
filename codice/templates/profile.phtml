@@ -1,3 +1,7 @@
+<!-- 
+  Filippo Finke
+  Pagina profilo
+-->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -7,12 +11,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Filippo Finke">
 
+  <!-- Stampa il titolo della pagina con il nome completo dell'utente -->
   <title>HackerLab - <?php echo $user["full_name"]; ?></title>
 
-  <!-- Bootstrap core CSS -->
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
   <link href="/css/global.css" rel="stylesheet">
   <link href="/css/blog-home.css" rel="stylesheet">
 
@@ -20,7 +22,7 @@
 
 <body>
 
-  <!-- Navigation -->
+  <!-- Navigazione -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/">HackerLab</a>
@@ -35,7 +37,8 @@
           <li class="nav-item active">
             <a class="nav-link" href="/profile">Profilo</a>
           </li>
-          <?php if($permission === "administrator"): ?>
+          <!-- Se l'utente è amministratore mostra i collegamenti al pannello amministrativo -->
+          <?php if ($permission === "administrator"): ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
               Pannello di amministrazione
@@ -54,28 +57,30 @@
     </div>
   </nav>
 
-  <!-- Page Content -->
+  <!-- Contenuto della pagina -->
   <div class="container main-container">
-
     <div class="row">
-
-      <!-- Blog Entries Column -->
       <div class="col-md-8">
-
         <h1 class="my-4">
+          <!-- Stampa il nome completo dell'utente che si sta visualizzando -->
           Articoli di <?php echo $user["full_name"]; ?><br>
-          <?php if($permission === "administrator"): ?>
+          <!-- Se l'utente che sta guardando la pagina è amministratore mostra anche l'indirizzo email -->
+          <?php if ($permission === "administrator"): ?>
             <small><?php echo $user["email"]; ?></small>
           <?php endif; ?>
         </h1>
-        <?php if(count($articles) == 0): ?>
+        <!-- Stampare una scritta in caso l'utente non abbia nessun articolo -->
+        <?php if (count($articles) == 0): ?>
         <h4>Nessun articolo.</h4>
         <?php endif; ?>
-        <?php foreach($articles as $article): ?>
+        <!-- Stampa tutti gli articoli creati dall'utente -->
+        <?php foreach ($articles as $article): ?>
         <div class="card mb-4">
-          <?php if($article["image"] != null): ?>
+          <!-- Se l'articolo possiede un immagine, stampa il tag img -->
+          <?php if ($article["image"] != null): ?>
           <img class="card-img-top" src="/image/?file_name=<?php echo $article["image"]; ?>">
           <?php endif; ?>          
+          <!-- Stampa delle varie informazioni dell'articolo -->
           <div class="card-body">
             <h2 class="card-title"><?php echo $article["title"]; ?></h2>
             <a href="/post/<?php echo $article["id"]; ?>" class="btn btn-primary">Vai all'articolo &rarr;</a>
@@ -86,13 +91,9 @@
           </div>
         </div>
         <?php endforeach; ?>
-
       </div>
 
-      <!-- Sidebar Widgets Column -->
       <div class="col-md-4">
-
-        <!-- Search Widget -->
         <div class="card my-4">
           <h5 class="card-header">Cerca</h5>
           <div class="card-body">
@@ -110,30 +111,23 @@
         <div class="card my-4">
           <h5 class="card-header">Accesso eseguito</h5>
           <div class="card-body">
+            <!-- Stampa il nome completo dell'utente loggato, se non presente stampa 'full_name' -->
             Bevenuto <b><?php echo $_SESSION["user"]["full_name"] ?? "full_name"; ?></b>
           </div>
         </div>
-
       </div>
-
     </div>
-    <!-- /.row -->
-
   </div>
-  <!-- /.container -->
 
   <!-- Footer -->
   <footer class="bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; HackerLab 2019</p>
     </div>
-    <!-- /.container -->
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

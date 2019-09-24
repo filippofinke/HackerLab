@@ -1,3 +1,7 @@
+<!-- 
+  Filippo Finke
+  Pagina di amministrazione utenti
+-->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -9,10 +13,7 @@
 
   <title>HackerLab - Admin - Utenti</title>
 
-  <!-- Bootstrap core CSS -->
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
   <link href="/css/global.css" rel="stylesheet">
   <link href="/css/blog-home.css" rel="stylesheet">
 
@@ -20,7 +21,7 @@
 
 <body>
 
-  <!-- Navigation -->
+  <!-- Navigazione -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/">HackerLab</a>
@@ -52,16 +53,14 @@
     </div>
   </nav>
 
-  <!-- Page Content -->
+  <!-- Contenuto della pagina -->
   <div class="container main-container">
 
     <div class="row">
-
-      <!-- Blog Entries Column -->
       <div class="col-md-12">
-
         <h1 class="my-4">Gestione utenti</h1>
 
+        <!-- Se è presente un errore, mostralo all'utente -->
         <?php if(isset($_SESSION["error"])): ?>
         <div class="alert alert-danger" role="alert">
           <?php echo $_SESSION["error"]; ?>
@@ -69,6 +68,7 @@
         </div>
         <?php endif; ?>
 
+        <!-- Se è presente un messaggio di successo, mostralo all'utente -->
         <?php if(isset($_SESSION["success"])): ?>
         <div class="alert alert-success" role="alert">
           <?php echo $_SESSION["success"]; ?>
@@ -76,6 +76,7 @@
         </div>
         <?php endif; ?>
 
+        <!-- Stampa tutti gli utenti registrati nel sistema con le relative informazioni -->
         <?php foreach($users as $user): ?>
         <div class="card mb-4">
           <div class="card-body">
@@ -90,27 +91,21 @@
           </div>
         </div>
         <?php endforeach; ?>
-
       </div>
-
     </div>
-    <!-- /.row -->
-
   </div>
-  <!-- /.container -->
 
   <!-- Footer -->
   <footer class="bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; HackerLab 2019</p>
     </div>
-    <!-- /.container -->
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script>
+  // Funzione per dare la conferma di elimina di un utente.
   function deleteUser(id) {
     var path = "/users/delete/" + id;
     if(confirm("Sei sicuro di voler eliminare questo utente?")) {

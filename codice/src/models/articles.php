@@ -1,9 +1,25 @@
 <?php
+/**
+ * Filippo Finke
+ * Articles
+ * 
+ * Classe che permette di interfaccarsi con la tabella ARTICLES.
+ */
 
 class Articles {
 
+    /**
+     * Numero di articoli per pagina.
+     */
     private static $limit = 3;
 
+    /**
+     * Metodo che permette di eseguire una ricerca tra gli articoli.
+     * 
+     * @param String $search La ricerca da effettuare.
+     * @param Integer $page Il numero di pagina.
+     * @return Array I risultati della ricerca
+     */
     public static function search($search, $page) {
         $limit = self::$limit;
         $offset = $limit * $page;
@@ -16,6 +32,12 @@ class Articles {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Metodo che permette di ricavare gli articoli di una pagina.
+     * 
+     * @param Integer $page Il numero di pagina.
+     * @return Array I risultato della pagina.
+     */
     public static function get($page) {
         $limit = self::$limit;
         $offset = $limit * $page;
@@ -26,6 +48,12 @@ class Articles {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Metodo che permette di ricavare un articolo attraverso il suo id.
+     * 
+     * @param Integer $post_id L'id dell'articolo.
+     * @return Array L'articolo.
+     */
     public static function getById($post_id) {
         $query = Database::get()->prepare("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles WHERE id = :post_id");
         $query->bindParam(":post_id", $post_id);
@@ -33,6 +61,12 @@ class Articles {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Metodo che permette di ricavare tutti gli articoli di un utente.
+     * 
+     * @param Integer $user_id L'id dell'utente.
+     * @return Array Gli articoli creati dall'utente.
+     */
     public static function getByUserId($user_id) {
         $query = Database::get()->prepare("SELECT * FROM articles WHERE user_id = :user_id ORDER BY created_at DESC");
         $query->bindParam(":user_id", $user_id);
@@ -40,6 +74,15 @@ class Articles {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Metodo che permette di inserire un articolo.
+     * 
+     * @param Integer $user_id L'id dell'utente.
+     * @param String $title Il titolo dell'articolo.
+     * @param Array $image Array contenente le informazioni dell'immagine.
+     * @param String $content Il contenuto dell'articolo.
+     * @return Boolean Se l'articolo è stato creato oppure no.
+     */
     public static function insert($user_id, $title, $image, $content) {
         
         $title = htmlspecialchars($title);
@@ -76,6 +119,12 @@ class Articles {
         return true;
     }
 
+    /**
+     * Metodo che permette di eliminare un articolo.
+     * 
+     * @param Integer $article_id L'id dell'articolo.
+     * @return Boolean Se l'articolo è stato eliminato oppure no.
+     */
     public static function delete($article_id) {
         $article = self::getById($article_id);
         if ($article) {

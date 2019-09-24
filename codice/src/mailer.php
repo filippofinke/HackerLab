@@ -1,9 +1,22 @@
 <?php
+/**
+ * Filippo Finke
+ * Mailer
+ */
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class Mailer {
 
+    /**
+     * Metodo che permette di inviare un email.
+     * 
+     * @param String $to L'indirizzo email al quale inviare il messaggio.
+     * @param String $full_name Il nome della persona al quale si sta inviando il messaggio.
+     * @param String $subject Il titolo del messaggio.
+     * @param String $message Il messaggio.
+     * @return Boolean Se l'email è stata inviata oppure no.
+     */
     public static function send($to, $full_name, $subject, $message) {
         $mail = new PHPMailer(true);
         try {

@@ -1,4 +1,6 @@
 <?php
+
+// Aiuta il server web di php ad identificare se la richiesta è di un file.
 if (PHP_SAPI == 'cli-server') {
     $url  = parse_url($_SERVER['REQUEST_URI']);
     $file = __DIR__ . $url['path'];
@@ -7,10 +9,13 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
+// Includo le librerie attraverso l'autoload di composer.
 require __DIR__ . '/../vendor/autoload.php';
 
+// Avvio la sessione.
 session_start();
 
+// Impostazioni del sito web.
 $settings = array(
     'settings' => [
         'displayErrorDetails' => true
@@ -23,43 +28,27 @@ $settings = array(
     ]
 );
 
-class Database {
-
-    private static $connection;
-
-    public static function get() {
-        return self::$connection;
-    }
-
-    public static function connect($settings) {
-        self::$connection = new PDO('mysql:host='.$settings["host"].';dbname='.$settings["dbname"], $settings["user"], $settings["password"], array(
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ));
-    }
-
-}
+// Includo la classe per gestire il database.
+require __DIR__ . '/../src/database.php';
+// Mi collego al database.
 Database::connect($settings["database"]);
+
+// Includo le classi utilizzate dall'applicativo.
 require __DIR__ . '/../src/mailer.php';
 require __DIR__ . '/../src/models/users.php';
 require __DIR__ . '/../src/models/articles.php';
 require __DIR__ . '/../src/models/comments.php';
 
+// Creo un oggetto di tipo Slim.
 $app = new \Slim\App($settings);
 
-/**
- * Aggiungo le dipendenze al sito.
- */
+// Aggiungo le dipendeze.
 $dependencies = require __DIR__ . '/../src/dependencies.php';
 $dependencies($app);
 
-/**
- * Registro i percorsi.
- */
+// Registro i percorsi.
 $routes = require __DIR__ . '/../src/routes.php';
 $routes($app);
 
-
-/**
- * Avvio il sito web.
- */
+// Avvio l'applicativo.
 $app->run();

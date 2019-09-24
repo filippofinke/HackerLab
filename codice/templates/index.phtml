@@ -1,3 +1,7 @@
+<!-- 
+  Filippo Finke
+  Pagina principale
+-->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -9,10 +13,7 @@
 
   <title>HackerLab - Home</title>
 
-  <!-- Bootstrap core CSS -->
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
   <link href="/css/global.css" rel="stylesheet">
   <link href="/css/blog-home.css" rel="stylesheet">
 
@@ -20,7 +21,7 @@
 
 <body>
 
-  <!-- Navigation -->
+  <!-- Navigazione -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/">HackerLab</a>
@@ -32,6 +33,7 @@
           <li class="nav-item active">
             <a class="nav-link" href="/">Home</a>
           </li>
+          <!-- Controlla se l'utente ha eseguito l'accesso -->
           <?php if($permission !== null): ?>
           <li class="nav-item">
             <a class="nav-link" href="/profile">Profilo</a>
@@ -41,6 +43,7 @@
             <a class="nav-link" href="/register">Registrati</a>
           </li>
           <?php endif; ?>
+          <!-- Se l'utente è amministratore mostra i collegamenti al pannello amministrativo -->
           <?php if($permission === "administrator"): ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
@@ -52,6 +55,7 @@
             </div>
           </li>
           <?php endif; ?>
+          <!-- Controlla se l'utente ha eseguito l'accesso -->
           <?php if($permission !== null): ?>
           <li class="nav-item">
             <a class="nav-link" href="/logout">Esci</a>
@@ -62,12 +66,11 @@
     </div>
   </nav>
 
-  <!-- Page Content -->
+  <!-- Contenuto della pagina -->
   <div class="container main-container">
-
     <div class="row">
-
       <div class="col-md-8">
+        <!-- Controlla se l'utente è arrivato alla pagina attraverso un'altra pagina o una ricerca -->
         <?php if(isset($_GET["search"]) && $_GET["search"] != ""): ?>
         <h1 class="my-4">Ricerca per <?php echo htmlspecialchars($_GET["search"]); ?></h1>
         <?php elseif(isset($page) && $page != 0): ?>
@@ -76,6 +79,7 @@
         <h1 class="my-4">Ultimi articoli</h1>
         <?php endif; ?>
 
+        <!-- Se è presente un errore, mostralo all'utente -->
         <?php if(isset($_SESSION["big_error"])): ?>
         <div class="alert alert-danger" role="alert">
           <?php echo $_SESSION["big_error"]; ?>
@@ -83,6 +87,7 @@
         </div>
         <?php endif; ?>
 
+        <!-- Controlla la presenza di articoli -->
         <?php if(count($articles) == 0): ?>
         <div class="text-center">
             <h4>Non è presente nessun articolo.</h4>
@@ -91,11 +96,14 @@
         <br>
         <?php endif;?>
 
+        <!-- Stampa gli articoli presenti nel sito -->
         <?php foreach($articles as $article): ?>
         <div class="card mb-4">
+          <!-- Se l'articolo possiede un immagine, stampa il tag img -->
           <?php if($article["image"] != null): ?>
           <img class="card-img-top" src="/image/?file_name=<?php echo $article["image"]; ?>">
           <?php endif; ?>
+          <!-- Stampa delle varie informazioni dell'articolo -->
           <div class="card-body">
             <h2 class="card-title"><?php echo $article["title"]; ?></h2>
             <a href="/post/<?php echo $article["id"]; ?>" class="btn btn-primary">Vai all'articolo &rarr;</a>
@@ -107,8 +115,9 @@
         </div>
         <?php endforeach; ?>
 
-        <!-- Pagination -->
+        <!-- Paginazione -->
         <ul class="pagination justify-content-center mb-4">
+          <!-- Calcola le pagine precedenti e successive -->
           <?php 
           $oldpage = $page - 1;
           if($oldpage < 0) $oldpage = 0;
@@ -125,10 +134,7 @@
 
       </div>
 
-      <!-- Sidebar Widgets Column -->
       <div class="col-md-4">
-
-        <!-- Search Widget -->
         <div class="card my-4">
           <h5 class="card-header">Cerca</h5>
           <div class="card-body">
@@ -142,8 +148,8 @@
             </form>
           </div>
         </div>
+        <!-- Se l'utente non ha eseguito l'accesso mostra la schermata di login -->
         <?php if($permission === null): ?>
-        <!-- Side Widget -->
         <div class="card my-4">
           <h5 class="card-header">Accedi</h5>
           <div class="card-body">
@@ -158,6 +164,8 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                   </div>
+                  
+                  <!-- Se è presente un errore, mostralo all'utente -->
                   <?php if(isset($_SESSION["error"])): ?>
                   <div class="alert alert-danger" role="alert">
                     <?php echo $_SESSION["error"]; ?>
@@ -165,6 +173,7 @@
                   </div>
                   <?php endif; ?>
 
+                  <!-- Se è presente un messaggio di successo, mostralo all'utente -->
                   <?php if(isset($_SESSION["success"])): ?>
                     <div class="alert alert-success" role="alert">
                       <?php echo $_SESSION["success"]; ?>
@@ -203,6 +212,7 @@
         <div class="card my-4">
           <h5 class="card-header">Accesso eseguito</h5>
           <div class="card-body">
+            <!-- Stampa il nome completo dell'utente loggato, se non presente stampa 'full_name' -->
             Bevenuto <b><?php echo $_SESSION["user"]["full_name"] ?? "full_name"; ?></b>
             <br>
             <br>
@@ -211,25 +221,20 @@
             </div>
           </div>
         </div>
-
         <?php endif; ?>
-
       </div>
-
     </div>
-    <!-- /.row -->
 
   </div>
-  <!-- /.container -->
 
   <!-- Footer -->
   <footer class="bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; HackerLab 2019</p>
     </div>
-    <!-- /.container -->
   </footer>
 
+  <!-- Modal di reset della password -->
   <div class="modal fade" id="resetModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -247,6 +252,7 @@
                 <label for="reset_password_repeat">Ripeti password</label>
                 <input type="password" class="form-control" name="repeat_password" placeholder="Password">
               </div>
+              <!-- Se è presente un errore, mostralo all'utente -->
               <?php if(isset($_SESSION["reset_password"])): ?>
               <div class="alert alert-danger" role="alert">
                 <?php echo $_SESSION["reset_password"]; ?>
@@ -262,6 +268,7 @@
     </div>
   </div>
 
+  <!-- Modal di pubblicazione di un articolo -->
   <div class="modal fade" id="addArticle" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -283,6 +290,7 @@
               </div>
           </div>
           <div class="modal-footer">
+            <!-- Se è presente un errore, mostralo all'utente -->
             <?php if(isset($_SESSION["article_error"])): ?>
             <div class="alert alert-danger" role="alert">
               <?php echo $_SESSION["article_error"]; ?>
@@ -296,7 +304,6 @@
     </div>
   </div>
 
-  <!-- Bootstrap core JavaScript -->
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -304,10 +311,12 @@
 <script>
 let params = new URLSearchParams(window.location.search);
 let token = params.get('reset_token');
+// Se è presente il parametro di recupero password mostra il modale.
 if(token != null) {
   $("#reset_token").val(token);
   $("#resetModal").modal({backdrop: 'static', keyboard: false});
 }
+// Se è presente il parametro di pubblicazione di un articolo mostra il modale.
 if(params.get('publish_article') != null) {
   $("#addArticle").modal('toggle');
 }

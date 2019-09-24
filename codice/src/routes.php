@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Filippo Finke
+ * Routes
+ * 
+ * Questo file contiene tutti i percorsi e la logica di essi.
+ */
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -10,6 +15,9 @@ return function (App $app) {
      * Funzioni di aiuto.
      */
 
+     /**
+      * Middleware che verifica se un utente è admin oppure no.
+      */
     $admin_middleware = function ($request, $response, $next) {
         if (!isset($_SESSION["user"])) {
             $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso!";
@@ -23,6 +31,9 @@ return function (App $app) {
         return $response;
     };
 
+    /**
+     * Middleware che verifica se un utente ha eseguito l'accesso oppure no.
+     */
     $login_middleware = function ($request, $response, $next) {
         if (!isset($_SESSION["user"])) {
             $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso!";
@@ -36,9 +47,14 @@ return function (App $app) {
      * Chiamate dirette.
      */
 
-     /**
-      * VULNERABILE!
-      */
+    /**
+     * Percorso /image/
+     * Parametri GET:
+     *  file_name = immagine
+     * 
+     * Utilizzato per ricavare le immagini degli articoli.
+     * ATTENZIONE: Questo percorso è vulnerabile all'attacco Directory traversal!
+     */
     $app->get('/image/', function (Request $request, Response $response, array $args) use ($app) {
         $file_name = $request->getParam('file_name');
         $file_path = __DIR__.'/../storage/'.$file_name;
@@ -51,6 +67,11 @@ return function (App $app) {
         return $response->write("Immagine inesistente.");
     });
 
+    /**
+     * Percorso /logout
+     * 
+     * Permette ad un utente di eliminare la propria sessione.
+     */
     $app->get('/logout', function (Request $request, Response $response, array $args) use ($app) {
         unset($_SESSION["user"]);
         session_destroy();
@@ -58,12 +79,28 @@ return function (App $app) {
         return $response->withRedirect("/", 302);
     });
 
+    /**
+     * Percorso /reset
+     * Parametri POST:
+     *  email = email alla quale inviare il link di recupero password.
+     * 
+     * Utilizzato per inviare email di recupero password.
+     * ATTENZIONE: Questo percorso è vulnerabile all'attacco Session Prediction!
+     */
     $app->post('/reset', function (Request $request, Response $response, array $args) use ($app) {
         $email = $request->getParam('email');
         Users::generateResetToken($email);
         return $response->withRedirect("/", 302);
     });
 
+    /**
+     * Percorso /login
+     * Parametri POST:
+     *  email = email dell'utente.
+     *  password = password dell'utente.
+     * 
+     * Utilizzato per autenticare un utente.
+     */
     $app->post('/login', function (Request $request, Response $response, array $args) use ($app) {
         $email = $request->getParam('email');
         $password = $request->getParam('password');
@@ -71,6 +108,15 @@ return function (App $app) {
         return $response->withRedirect("/", 302);
     });
 
+    /**
+     * Percorso /reset_password
+     * Parametri POST:
+     *  reset_token = il token di recupero password.
+     *  password = la nuova password.
+     *  repeat_password = la nuova password ripetuta.
+     * 
+     * Utilizzato per impostare una password attraverso il token di recupero.
+     */
     $app->post('/reset_password', function (Request $request, Response $response, array $args) use ($app) {
         $reset_token = $request->getParam('reset_token');
         $password = $request->getParam('password');
@@ -82,6 +128,16 @@ return function (App $app) {
         }
     });
 
+    /**
+     * Percorso /register
+     * Parametri POST:
+     *  full_name = nome completo dell'utente.
+     *  email = l'email dell'utente.
+     *  password = la password.
+     *  repeat_password = la password ripetuta.     
+     * 
+     * Utilizzato per la creazione di un utente.
+     * */
     $app->post('/register', function (Request $request, Response $response, array $args) use ($app) {
         $full_name = $request->getParam('full_name');
         $email = $request->getParam('email');
@@ -93,6 +149,12 @@ return function (App $app) {
 
     /**
      * Pagine senza autenticazione.
+     */
+
+    /**
+     * Percorso  / o /page/{page}
+     * 
+     * Pagina principale, vengono mostrati gli utili articoli.
      */
     $app->get('/[page/{page}]', function (Request $request, Response $response, array $args) use ($app) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
@@ -114,6 +176,9 @@ return function (App $app) {
         ));
     });
     
+    /**
+     * Pagina di registrazione.
+     */
     $app->get('/register', function (Request $request, Response $response, array $args) use ($app) {
         if(isset($_SESSION["user"])) return $response->withRedirect("/", 302);
         $this->view->render($response, "register.phtml", $args);
@@ -121,6 +186,12 @@ return function (App $app) {
 
     /**
      * Pagine con autenticazione.
+     */
+
+    /**
+     * Percorso /profilo o /profilo/{user_id}
+     * 
+     * Pagina di profilo di un utente.
      */
     $app->get('/profile[/{user_id}]', function (Request $request, Response $response, array $args) use ($app) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
@@ -138,6 +209,11 @@ return function (App $app) {
         }
     })->add($login_middleware);
 
+    /**
+     * Percorso /post/{post_id}
+     * 
+     * Pagina di un articolo.
+     */
     $app->get('/post/{post_id}', function (Request $request, Response $response, array $args) use ($app) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
         $post = Articles::getById($args["post_id"]);
@@ -152,6 +228,13 @@ return function (App $app) {
         }
     })->add($login_middleware);
 
+    /**
+     * Percorso /post/{post_id}
+     * Parametri POST:
+     *  comment = il commento.
+     * 
+     * Utilizzato per aggiungere un commento ad un articolo.
+     */
     $app->post('/post/{post_id}', function (Request $request, Response $response, array $args) use ($app) {
         $comment = $request->getParam("comment");
         $post = Articles::getById($args["post_id"]);
@@ -166,6 +249,16 @@ return function (App $app) {
         return $response->withRedirect("/", 302);
     })->add($login_middleware);
 
+    /**
+     * Percorso /post
+     * Parametri POST:
+     *  title = il titolo.
+     *  content = il contenuto.
+     * Altri parametri:
+     *  image = il file dell'immagine
+     * 
+     * Utilizzato per la creazione di un articolo.
+     */
     $app->post('/post', function (Request $request, Response $response, array $args) use ($app) {
         
         $title = $request->getParam('title');
@@ -179,6 +272,11 @@ return function (App $app) {
 
     })->add($login_middleware);
 
+    /**
+     * Percorso /admin/articles o /admin/articles/{page}
+     * 
+     * Pagina di amministrazione degli articoli.
+     */
     $app->get('/admin/articles[/{page}]', function (Request $request, Response $response, array $args) use ($app) {
         $page = $args["page"] ?? 0;
         if(!is_numeric($page)) $page = 0;
@@ -194,17 +292,32 @@ return function (App $app) {
         ));
     })->add($admin_middleware);
 
+    /**
+     * Percorso /articles/delete/{article_id}
+     * 
+     * Utilizzato per eliminare un articolo.
+     */
     $app->get('/articles/delete/{article_id}', function (Request $request, Response $response, array $args) use ($app) {
         Articles::delete($args["article_id"]);
         return $response->withRedirect("/admin/articles", 302);
     })->add($admin_middleware);
 
+    /**
+     * Percorso /admin/users
+     * 
+     * Pagina di amministrazione utenti.
+     */
     $app->get('/admin/users', function (Request $request, Response $response, array $args) use ($app) {
         $this->view->render($response, "admin/utenti.phtml", array(
             'users' => Users::get()
         ));
     })->add($admin_middleware);
 
+     /**
+     * Percorso /users/delete/{user_id}
+     * 
+     * Utilizzato per eliminare un utente.
+     */
     $app->get('/users/delete/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
         Users::delete($args["user_id"]);
         return $response->withRedirect("/admin/users", 302);

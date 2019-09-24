@@ -1,3 +1,7 @@
+<!-- 
+  Filippo Finke
+  Pagina di registrazione
+-->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -9,10 +13,7 @@
 
   <title>HackerLab - Registrati</title>
 
-  <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
   <link href="/css/global.css" rel="stylesheet">
   <link href="css/register.css" rel="stylesheet">
 
@@ -20,7 +21,7 @@
 
 <body>
 
-  <!-- Navigation -->
+  <!-- Navigazione -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/">HackerLab</a>
@@ -40,7 +41,7 @@
     </div>
   </nav>
 
-  <!-- Page Content -->
+  <!-- Contenuto della pagina -->
   <br>
   <div class="container main-container">
 
@@ -67,7 +68,8 @@
               <label for="repeat_password">Ripeti la password</label>
               <input type="password" class="form-control" name="repeat_password" placeholder="Ripeti la password">
             </div>
-            <?php if(isset($_SESSION["error"])): ?>
+            <!-- Se è presente un errore, mostralo all'utente -->
+            <?php if (isset($_SESSION["error"])): ?>
               <div class="alert alert-danger" role="alert">
                 <?php echo $_SESSION["error"]; ?>
                 <?php unset($_SESSION["error"]); ?>
@@ -78,24 +80,18 @@
         </div>
       </div>
     </div>
-    <!-- /.row -->
-
   </div>
   <br>
-  <!-- /.container -->
 
   <!-- Footer -->
   <footer class="bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; HackerLab 2019</p>
     </div>
-    <!-- /.container -->
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

@@ -1,13 +1,30 @@
 <?php
+/**
+ * Filippo Finke
+ * Users
+ * 
+ * Classe che permette di interfaccarsi con la tabella USERS.
+ */
 
 class Users {
 
+    /**
+     * Metodo che permette di ricavare tutti gli utenti.
+     * 
+     * @return Array Gli utenti.
+     */
     public static function get() {
         $query = Database::get()->prepare("SELECT * FROM users ORDER BY permission ASC, full_name ASC");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Metodo che permette di ricavare un utente.
+     * 
+     * @param Integer $user_id L'id dell'utente.
+     * @return Array L'utente.
+     */
     public static function getById($user_id) {
         $query = Database::get()->prepare("SELECT * FROM users WHERE id = :user_id");
         $query->bindParam(":user_id", $user_id);
@@ -15,6 +32,12 @@ class Users {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Metodo che permette di ricavare un utente dalla email.
+     * 
+     * @param String $email L'email.
+     * @return Array L'utente.
+     */
     public static function getByEmail($email) {
         $query = Database::get()->prepare("SELECT * FROM users WHERE email = :email");
         $query->bindParam(":email", $email);
@@ -22,6 +45,12 @@ class Users {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Metodo che permette di eliminare un utente.
+     * 
+     * @param Integer $user_id L'id dell'utente.
+     * @return Boolean Se l'utente è stato eliminato oppure no.
+     */
     public static function delete($user_id) {
         if($user_id == $_SESSION["user"]["id"]) {
             $_SESSION["error"] = "Non puoi eliminare l'utente corrente!";
@@ -38,6 +67,14 @@ class Users {
         return true;
     }
 
+    /**
+     * Metodo che permette di resettare la password di un utente.
+     * 
+     * @param String $reset_token Il token di recupero password.
+     * @param String $password La nuova password.
+     * @param String $repeat_password La nuova password ripetuta.
+     * @return Boolean Se la password è stata reimpostata oppure no. 
+     */
     public static function resetPassword($reset_token, $password, $repeat_password) {
         if(strlen($password) < 4) {
             $_SESSION["reset_password"] = "La password deve avere almeno 4 caratteri!";
@@ -68,6 +105,12 @@ class Users {
         }
     }
 
+    /**
+     * Metodo che permette di generare un token di recupero per un utente.
+     * 
+     * @param String $email L'email.
+     * @return Boolean Se il token è stato creato oppure no.
+     */
     public static function generateResetToken($email) {
         $user = self::getByEmail($email);
         if($user) {
@@ -99,6 +142,13 @@ class Users {
     
     }
 
+    /**
+     * Metodo utilizzato per autenticare un utente.
+     * 
+     * @param String $email L'email dell'utente.
+     * @param String $password La password dell'utente.
+     * @return Boolean Se le credenziali sono corrette oppure no.
+     */
     public static function login($email, $password) {
         $user = self::getByEmail($email);
         if($user) {
@@ -123,6 +173,15 @@ class Users {
         return false;
     } 
 
+    /**
+     * Metodo che permette di registrare un utente.
+     * 
+     * @param String $full_name Il nome completo.
+     * @param String $email L'email.
+     * @param String $password La password.
+     * @param String $repeat_password La password ripetuta.
+     * @return Boolean Se l'utente è stato creato oppure no.
+     */
     public static function register($full_name, $email, $password, $repeat_password) {
         
         $email = strtolower($email);

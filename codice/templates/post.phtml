@@ -1,3 +1,7 @@
+<!-- 
+  Filippo Finke
+  Pagina di un articolo
+-->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -7,12 +11,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Filippo Finke">
 
+  <!-- Stampa il titolo della pagina con il nome dell'articolo -->
   <title>HackerLab - <?php echo $post["title"]; ?></title>
 
-  <!-- Bootstrap core CSS -->
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
   <link href="/css/global.css" rel="stylesheet">
   <link href="/css/blog-post.css" rel="stylesheet">
 
@@ -20,7 +22,7 @@
 
 <body>
 
-  <!-- Navigation -->
+  <!-- Navigazione -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/">HackerLab</a>
@@ -35,7 +37,8 @@
           <li class="nav-item">
             <a class="nav-link" href="/profile">Profilo</a>
           </li>
-          <?php if($permission === "administrator"): ?>
+          <!-- Se l'utente è amministratore mostra i collegamenti al pannello amministrativo -->
+          <?php if ($permission === "administrator"): ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
               Pannello di amministrazione
@@ -54,47 +57,39 @@
     </div>
   </nav>
 
-  <!-- Page Content -->
+  <!-- Contenuto della pagina -->
   <div class="container main-container">
-
     <div class="row">
-
-      <!-- Post Content Column -->
       <div class="col-lg-8">
 
-        <!-- Title -->
+        <!-- Stampa il titolo dell'articolo -->
         <h1 class="mt-4"><?php echo $post["title"]; ?></h1>
 
-        <!-- Author -->
+        <!-- Stampa l'autore dell'articolo -->
         <p class="lead">
           di
           <a href="/profile/<?php echo $post["user_id"]; ?>"><?php echo $post["full_name"] ?? "eliminato"; ?></a>
         </p>
-
         <hr>
-
-        <!-- Date/Time -->
+        <!-- Stampa la data di pubblicazione -->
         <p>Pubblicato il <?php echo date("d.m.Y", strtotime($post["created_at"])); ?> alle <?php echo date("H:i", strtotime($post["created_at"])); ?></p>
-
         <hr>
-
-        <!-- Preview Image -->
-        <?php if($post["image"] != null): ?>
+        <!-- Se l'articolo ha un'immagine, stampa il collegamento ad essa -->
+        <?php if ($post["image"] != null): ?>
         <div class="text-center">
           <img style="max-width: 100%;" src="/image/?file_name=<?php echo $post["image"]; ?>">
         </div>
         <hr>
         <?php endif; ?>
 
-        <!-- Post Content -->
-
+        <!-- Contenuto dell'articolo -->
         <p>
           <?php echo $post["content"]; ?>
         </p>
 
         <hr>
 
-        <!-- Comments Form -->
+        <!-- Formulario per commentare -->
         <div class="card my-4">
           <h5 class="card-header">Lascia un commento</h5>
           <div class="card-body">
@@ -102,7 +97,8 @@
               <div class="form-group">
                 <textarea name="comment" maxlength="255" class="form-control" rows="2"></textarea>
               </div>
-              <?php if(isset($_SESSION["error"])): ?>
+              <!-- Se è presente un errore, mostralo all'utente -->
+              <?php if (isset($_SESSION["error"])): ?>
                 <div class="alert alert-danger" role="alert">
                   <?php echo $_SESSION["error"]; ?>
                   <?php unset($_SESSION["error"]); ?>
@@ -113,10 +109,12 @@
           </div>
         </div>
 
-        <?php foreach($comments as $comment): ?>
+        <!-- Stampa dei commenti correlati con l'articolo -->
+        <?php foreach ($comments as $comment): ?>
         <div class="media mb-4">
           <img style="max-width: 50px;" class="d-flex mr-3 rounded-circle" src="/images/user.png">
           <div class="media-body">
+            <!-- Stampa il commento con le relative informazioni -->
             <h5 class="mt-0">
               <a href="/profile/<?php echo $comment["user_id"]; ?>"> <?php echo $comment["full_name"] ?? "eliminato"; ?></a>
               <small><?php echo date("d.m.y", strtotime($comment["created_at"])); ?></small>
@@ -128,10 +126,7 @@
 
       </div>
 
-      <!-- Sidebar Widgets Column -->
       <div class="col-md-4">
-
-        <!-- Search Widget -->
         <div class="card my-4">
           <h5 class="card-header">Cerca</h5>
           <div class="card-body">
@@ -149,30 +144,23 @@
         <div class="card my-4">
           <h5 class="card-header">Accesso eseguito</h5>
           <div class="card-body">
+          <!-- Stampa il nome completo dell'utente loggato, se non presente stampa 'full_name' -->
           Bevenuto <b><?php echo $_SESSION["user"]["full_name"] ?? "full_name"; ?></b>
           </div>
         </div>
-
       </div>
-
     </div>
-    <!-- /.row -->
-
   </div>
-  <!-- /.container -->
 
   <!-- Footer -->
   <footer class="bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; HackerLab 2019</p>
     </div>
-    <!-- /.container -->
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

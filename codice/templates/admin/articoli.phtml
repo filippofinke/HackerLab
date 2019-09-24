@@ -1,3 +1,7 @@
+<!-- 
+  Filippo Finke
+  Pagina di amministrazione articoli
+-->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -9,10 +13,7 @@
 
   <title>HackerLab - Admin - Articoli</title>
 
-  <!-- Bootstrap core CSS -->
   <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
   <link href="/css/global.css" rel="stylesheet">
   <link href="/css/blog-home.css" rel="stylesheet">
 
@@ -20,7 +21,7 @@
 
 <body>
 
-  <!-- Navigation -->
+  <!-- Navigazione -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/">HackerLab</a>
@@ -52,16 +53,14 @@
     </div>
   </nav>
 
-  <!-- Page Content -->
+  <!-- Contenuto della pagina -->
   <div class="container main-container">
 
     <div class="row">
-
-      <!-- Blog Entries Column -->
       <div class="col-md-12">
-
         <h1 class="my-4">Gestione articoli</h1>
 
+        <!-- Se è presente un errore, mostralo all'utente -->
         <?php if(isset($_SESSION["error"])): ?>
         <div class="alert alert-danger" role="alert">
           <?php echo $_SESSION["error"]; ?>
@@ -69,6 +68,7 @@
         </div>
         <?php endif; ?>
 
+        <!-- Se è presente un messaggio di successo, mostralo all'utente -->
         <?php if(isset($_SESSION["success"])): ?>
         <div class="alert alert-success" role="alert">
           <?php echo $_SESSION["success"]; ?>
@@ -76,12 +76,14 @@
         </div>
         <?php endif; ?>
 
-        <!-- Blog Post -->
+        <!-- Stampa gli articoli della pagina corrente. -->
         <?php foreach($articles as $article): ?>
         <div class="card mb-4">
+          <!-- Se l'articolo possiede un immagine, stampa il tag img -->
           <?php if($article["image"] != null): ?>
           <img class="card-img-top" src="/image/?file_name=<?php echo $article["image"]; ?>">
           <?php endif; ?>
+          <!-- Stampa delle varie informazioni dell'articolo -->
           <div class="card-body">
             <h2 class="card-title"><?php echo $article["title"]; ?></h2>
             <a href="/post/<?php echo $article["id"]; ?>" class="btn btn-primary">Vai all'articolo &rarr;</a>
@@ -94,8 +96,9 @@
         </div>
         <?php endforeach; ?>
 
-        <!-- Pagination -->
+        <!-- Paginazione -->
         <ul class="pagination justify-content-center mb-4">
+          <!-- Calcola le pagine precedenti e successive -->
           <?php 
           $oldpage = $page - 1;
           if($oldpage < 0) $oldpage = 0;
@@ -108,25 +111,20 @@
           </li>
         </ul>
       </div>
-
     </div>
-    <!-- /.row -->
-
   </div>
-  <!-- /.container -->
 
   <!-- Footer -->
   <footer class="bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; HackerLab 2019</p>
     </div>
-    <!-- /.container -->
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script>
+  // Funzione per dare la conferma di elimina di un articolo.
   function deleteArticle(id) {
     var path = "/articles/delete/" + id;
     if(confirm("Sei sicuro di voler eliminare questo articolo?")) {
