@@ -41,7 +41,7 @@ class Articles {
     public static function get($page) {
         $limit = self::$limit;
         $offset = $limit * $page;
-        $query = Database::get()->prepare("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+        $query = Database::get()->prepare("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles ORDER BY id DESC LIMIT :limit OFFSET :offset");
         $query->bindParam(":limit", $limit, PDO::PARAM_INT);
         $query->bindParam(":offset", $offset, PDO::PARAM_INT);
         $query->execute();
@@ -86,15 +86,17 @@ class Articles {
     public static function insert($user_id, $title, $image, $content) {
         
         $title = htmlspecialchars($title);
-        $content = strip_tags($content, '<h1><ul><li><a><br>');
+        $content = strip_tags($content, '<h1><ul><li><a><br><img><code>');
+
+        if(empty($title) || empty($content)) return false;
 
         if(strlen($title) > 255) {
             $_SESSION["article_error"] = "Il titolo non può essere più lungo di 255 caratteri!";
             return false;
         }
 
-        if(strlen($content) > 1000) {
-            $_SESSION["article_error"] = "Il contenuto dell'articolo non può superare i 1000 caratteri!";
+        if(strlen($content) > 2000) {
+            $_SESSION["article_error"] = "Il contenuto dell'articolo non può superare i 2000 caratteri!";
             return false;
         }
         $file_name = null;

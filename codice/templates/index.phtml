@@ -101,7 +101,7 @@
         <div class="card mb-4">
           <!-- Se l'articolo possiede un immagine, stampa il tag img -->
           <?php if($article["image"] != null): ?>
-          <img class="card-img-top" src="/image/?file_name=<?php echo $article["image"]; ?>">
+          <img style="max-height: 200px; margin:auto; padding: 0px;" src="/image/?file_name=<?php echo $article["image"]; ?>">
           <?php endif; ?>
           <!-- Stampa delle varie informazioni dell'articolo -->
           <div class="card-body">
@@ -286,7 +286,7 @@
               </div>
               <div class="form-group">
                 <textarea class="form-control" name="content" rows="10" placeholder="Contenuto"></textarea>
-                <code>Sono permessi i tag html: h1, ul, li, a, br</code>
+                <code>Sono permessi i tag html: h1, ul, li, a, img, code, br</code>
               </div>
           </div>
           <div class="modal-footer">
