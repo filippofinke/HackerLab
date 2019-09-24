@@ -53,7 +53,7 @@ return function (App $app) {
      *  file_name = immagine
      * 
      * Utilizzato per ricavare le immagini degli articoli.
-     * ATTENZIONE: Questo percorso è vulnerabile all'attacco Directory traversal!
+     * ATTENZIONE: Questo percorso è vulnerabile all'attacco Directory traversal o File Inclusion Vulnerability!
      */
     $app->get('/image/', function (Request $request, Response $response, array $args) use ($app) {
         $file_name = $request->getParam('file_name');
