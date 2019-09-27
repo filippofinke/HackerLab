@@ -18,6 +18,7 @@ session_start();
 // Impostazioni del sito web.
 $settings = array(
     'settings' => [
+        // Abilita i messaggi di errore a schermo.
         'displayErrorDetails' => true
     ],
     'database' => [
