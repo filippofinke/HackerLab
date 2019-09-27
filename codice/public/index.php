@@ -23,8 +23,8 @@ $settings = array(
     ],
     'database' => [
         'host' => '127.0.0.1',
-        'user' => 'root',
-        'password' => 'filospinato22',
+        'user' => 'hackerlab',
+        'password' => 'Password&1',
         'dbname' => 'hackerlab'
     ]
 );

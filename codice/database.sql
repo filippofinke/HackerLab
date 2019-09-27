@@ -9,6 +9,12 @@ CREATE DATABASE hackerlab;
 USE hackerlab;
 
 #
+# Creazione utente
+#
+DROP USER IF EXISTS 'hackerlab'@'localhost';
+CREATE USER 'hackerlab'@'localhost' IDENTIFIED BY 'Password&1';
+GRANT SELECT, UPDATE, DELETE, INSERT ON hackerlab.* TO 'hackerlab'@'localhost';
+#
 # Creazione tabelle
 # 
 
