@@ -116,7 +116,7 @@
           <div class="media-body">
             <!-- Stampa il commento con le relative informazioni -->
             <h5 class="mt-0">
-              <a href="/profile/<?php echo $comment["user_id"]; ?>"> <?php echo $comment["full_name"] ?? "eliminato"; ?></a>
+              <a href="/profile/<?php echo $comment["user_id"] ?? "eliminato"; ?>"> <?php echo $comment["full_name"] ?? "eliminato"; ?></a>
               <small><?php echo date("d.m.y", strtotime($comment["created_at"])); ?></small>
             </h5>
             <?php echo $comment["comment"]; ?>
