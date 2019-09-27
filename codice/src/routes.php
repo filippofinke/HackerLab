@@ -205,7 +205,8 @@ return function (App $app) {
                 'articles' => $articles
             ));
         } else {
-            return $response->withRedirect("/", 302);
+            // Lancia un errore in caso l'utente non sia esistente.
+            throw new Exception("User not found");
         }
     })->add($login_middleware);
 
