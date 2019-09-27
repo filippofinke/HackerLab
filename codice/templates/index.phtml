@@ -74,7 +74,7 @@
         <?php if(isset($_GET["search"]) && $_GET["search"] != ""): ?>
         <h1 class="my-4">Ricerca per <?php echo htmlspecialchars($_GET["search"]); ?></h1>
         <?php elseif(isset($page) && $page != 0): ?>
-        <h1 class="my-4">Pagina <?php echo $page; ?></h1>
+        <h1 class="my-4">Pagina <?php echo ($page + 1); ?></h1>
         <?php else: ?>
         <h1 class="my-4">Ultimi articoli</h1>
         <?php endif; ?>

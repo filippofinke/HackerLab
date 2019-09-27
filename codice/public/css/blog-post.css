@@ -6,3 +6,8 @@
 body {
   padding-top: 56px;
 }
+
+.justify {
+  text-align: justify;
+  text-justify: inter-word;
+}

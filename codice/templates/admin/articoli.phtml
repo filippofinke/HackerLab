@@ -104,10 +104,10 @@
           if($oldpage < 0) $oldpage = 0;
           ?>
           <li class="page-item <?php if($page == 0) echo "disabled"; ?>">
-            <a class="page-link" href="/admin/articles/<?php echo $oldpage.$search; ?>">&larr; Recenti</a>
+            <a class="page-link" href="/admin/articles/<?php echo $oldpage; ?>">&larr; Recenti</a>
           </li>
           <li class="page-item">
-            <a class="page-link" href="/admin/articles/<?php echo ($page + 1).$search; ?>">Vecchi &rarr;</a>
+            <a class="page-link" href="/admin/articles/<?php echo ($page + 1); ?>">Vecchi &rarr;</a>
           </li>
         </ul>
       </div>
