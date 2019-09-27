@@ -14,7 +14,10 @@ class Articles {
     private static $limit = 3;
 
     /**
+     * VULNERABILE!
+     * 
      * Metodo che permette di eseguire una ricerca tra gli articoli.
+     * ES: SQL Injection "a%'; DROP DATABASE hackerlab; --"
      * 
      * @param String $search La ricerca da effettuare.
      * @param Integer $page Il numero di pagina.
@@ -23,12 +26,8 @@ class Articles {
     public static function search($search, $page) {
         $limit = self::$limit;
         $offset = $limit * $page;
-        $search = "%".str_replace("%","",$search)."%";
-        $query = Database::get()->prepare("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles WHERE title LIKE :search ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
-        $query->bindParam(":search", $search);
-        $query->bindParam(":limit", $limit, PDO::PARAM_INT);
-        $query->bindParam(":offset", $offset, PDO::PARAM_INT);
-        $query->execute();
+        $search = "'%".$search."%'";
+        $query = Database::get()->query("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles WHERE title LIKE $search ORDER BY created_at DESC LIMIT $limit OFFSET $offset");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
