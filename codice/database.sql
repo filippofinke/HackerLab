@@ -13,7 +13,7 @@ USE hackerlab;
 #
 DROP USER IF EXISTS 'hackerlab'@'localhost';
 CREATE USER 'hackerlab'@'localhost' IDENTIFIED BY 'Password&1';
-GRANT SELECT, UPDATE, DELETE, INSERT ON hackerlab.* TO 'hackerlab'@'localhost';
+GRANT DROP, SELECT, UPDATE, DELETE, INSERT ON hackerlab.* TO 'hackerlab'@'localhost';
 #
 # Creazione tabelle
 # 
