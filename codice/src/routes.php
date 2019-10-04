@@ -47,6 +47,10 @@ return function (App $app) {
      * Chiamate dirette.
      */
 
+     $app->get('/reset', function (Request $request, Response $response, array $args)  use ($app) {
+        var_dump(Database::reset());
+     });
+
     /**
      * Percorso /image/
      * Parametri GET:
