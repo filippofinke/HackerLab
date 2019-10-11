@@ -38,11 +38,10 @@ class Database
     /**
      * Metodo utilizzato per ripristinare il database.
      */
-    /*public static function reset()
+    public static function reset()
     {
-        $query_sql = file_get_contents(__DIR__ . '/../database.sql');
-        var_dump($query_sql);
-        $query = self::get()->exec($query_sql);
+        $query_sql = file_get_contents(__DIR__ . '/../restore.sql');
+        $query = self::get()->query($query_sql);
         return $query;
-    }*/
+    }
 }

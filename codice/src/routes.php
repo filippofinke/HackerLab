@@ -48,7 +48,8 @@ return function (App $app) {
      */
 
      $app->get('/reset', function (Request $request, Response $response, array $args)  use ($app) {
-        var_dump(Database::reset());
+        Database::reset();
+        return $response->withRedirect("/", 302);
      });
 
     /**
