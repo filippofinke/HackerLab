@@ -48,9 +48,13 @@ return function (App $app) {
      */
 
      $app->get('/reset', function (Request $request, Response $response, array $args)  use ($app) {
-        Database::reset();
-        return $response->withRedirect("/", 302);
-     });
+        if (Database::reset()) {
+            $_SESSION["success"] = "Database ripristinato con successo!";
+        } else {
+            $_SESSION["error"] = "Impossibile ripristinare il database!";
+        }
+        return $response->withRedirect("/logout", 302);
+    });
 
     /**
      * Percorso /image/
@@ -79,7 +83,6 @@ return function (App $app) {
      */
     $app->get('/logout', function (Request $request, Response $response, array $args) use ($app) {
         unset($_SESSION["user"]);
-        session_destroy();
         setcookie("permission", '', time() - 3600);
         return $response->withRedirect("/", 302);
     });
