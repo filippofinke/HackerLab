@@ -64,7 +64,7 @@
         <h1 class="my-4">Gestione utenti</h1>
 
         <!-- Se è presente un errore, mostralo all'utente -->
-        <?php if(isset($_SESSION["error"])): ?>
+        <?php if (isset($_SESSION["error"])): ?>
         <div class="alert alert-danger" role="alert">
           <?php echo $_SESSION["error"]; ?>
           <?php unset($_SESSION["error"]); ?>
@@ -72,7 +72,7 @@
         <?php endif; ?>
 
         <!-- Se è presente un messaggio di successo, mostralo all'utente -->
-        <?php if(isset($_SESSION["success"])): ?>
+        <?php if (isset($_SESSION["success"])): ?>
         <div class="alert alert-success" role="alert">
           <?php echo $_SESSION["success"]; ?>
           <?php unset($_SESSION["success"]); ?>
@@ -80,18 +80,24 @@
         <?php endif; ?>
 
         <!-- Stampa tutti gli utenti registrati nel sistema con le relative informazioni -->
-        <?php foreach($users as $user): ?>
+        <?php foreach ($users as $user): ?>
         <div class="card mb-4">
           <div class="card-body">
+          
             <h2 class="card-title">
-              <?php echo $user["full_name"]; ?>
+              <?php echo $user["full_name"].((!$user["enabled"])?" (Disabilitato)":""); ?>
               <a href="/profile/<?php echo $user["id"]; ?>" class="btn btn-primary float-right">Pagina profilo &rarr;</a>
             </h2>
             <?php echo $user["email"]; ?>
             <br>
             <b><?php echo $user["permission"]; ?></b>
             <a onclick="deleteUser(<?php echo $user["id"]; ?>);" class="btn btn-danger float-right text-white">Elimina</a>
-          </div>
+            <?php if($user["enabled"]): ?>
+              <a href="/users/disable/<?php echo $user["id"]; ?>" class="btn btn-warning float-right text-white">Disabilita</a>
+            <?php else: ?>
+              <a href="/users/enable/<?php echo $user["id"]; ?>" class="btn btn-warning float-right text-white">Abilita</a>
+            <?php endif; ?>  
+         </div>
         </div>
         <?php endforeach; ?>
       </div>

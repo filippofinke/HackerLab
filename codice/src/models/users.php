@@ -68,6 +68,46 @@ class Users {
     }
 
     /**
+     * Metodo che permette di disabilitare un utente.
+     * 
+     * @param Integer $user_id L'id dell'utente.
+     * @return Boolean Se l'utente è stato disabilitato oppure no.
+     */
+    public static function disable($user_id) {
+        if($user_id == $_SESSION["user"]["id"]) {
+            $_SESSION["error"] = "Non puoi disabilitare l'utente corrente!";
+            return false;
+        }
+        $query = Database::get()->prepare("UPDATE users SET enabled = 0 WHERE id = :user_id");
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        if(!$query) {
+            $_SESSION["error"] = "Impossibile disabilitare l'utente!";
+            return false;
+        }
+        $_SESSION["success"] = "Utente disabilitato!";
+        return true;
+    }
+
+    /**
+     * Metodo che permette di abilitare un utente.
+     * 
+     * @param Integer $user_id L'id dell'utente.
+     * @return Boolean Se l'utente è stato abilitato oppure no.
+     */
+    public static function enable($user_id) {
+        $query = Database::get()->prepare("UPDATE users SET enabled = 1 WHERE id = :user_id");
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        if(!$query) {
+            $_SESSION["error"] = "Impossibile abilitare l'utente!";
+            return false;
+        }
+        $_SESSION["success"] = "Utente abilitato!";
+        return true;
+    }
+
+    /**
      * Metodo che permette di resettare la password di un utente.
      * 
      * @param String $reset_token Il token di recupero password.

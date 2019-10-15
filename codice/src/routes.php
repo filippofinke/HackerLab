@@ -332,4 +332,24 @@ return function (App $app) {
         return $response->withRedirect("/admin/users", 302);
     })->add($admin_middleware);
 
+    /**
+     * Percorso /users/disable/{user_id}
+     * 
+     * Utilizzato per disabilitare un utente.
+     */
+    $app->get('/users/disable/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
+        Users::disable($args["user_id"]);
+        return $response->withRedirect("/admin/users", 302);
+    })->add($admin_middleware);
+
+    /**
+     * Percorso /users/enable/{user_id}
+     * 
+     * Utilizzato per abilitare un utente.
+     */
+    $app->get('/users/enable/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
+        Users::enable($args["user_id"]);
+        return $response->withRedirect("/admin/users", 302);
+    })->add($admin_middleware);
+
 };
