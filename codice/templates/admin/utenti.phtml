@@ -49,7 +49,7 @@
             <a class="nav-link" href="/logout">Esci</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/reset">Reset database</a>
+            <a class="nav-link" onclick="if(confirm('Sicuro di voler eseguire un reset del database?')) { window.location.href= '/reset';}">Reset database</a>
           </li>
         </ul>
       </div>
@@ -85,17 +85,20 @@
           <div class="card-body">
           
             <h2 class="card-title">
-              <?php echo $user["full_name"].((!$user["enabled"])?" (Disabilitato)":""); ?>
+              <?php echo $user["full_name"];?>
               <a href="/profile/<?php echo $user["id"]; ?>" class="btn btn-primary float-right">Pagina profilo &rarr;</a>
             </h2>
+            <?php if(!$user["enabled"]): ?>
+              <p class="text-danger">Disabilitato</p>
+            <?php endif; ?>
             <?php echo $user["email"]; ?>
             <br>
             <b><?php echo $user["permission"]; ?></b>
             <a onclick="deleteUser(<?php echo $user["id"]; ?>);" class="btn btn-danger float-right text-white">Elimina</a>
             <?php if($user["enabled"]): ?>
-              <a href="/users/disable/<?php echo $user["id"]; ?>" class="btn btn-warning float-right text-white">Disabilita</a>
+              <a href="/users/disable/<?php echo $user["id"]; ?>" class="btn btn-warning float-right text-white" style="margin-right: 10px;">Disabilita</a>
             <?php else: ?>
-              <a href="/users/enable/<?php echo $user["id"]; ?>" class="btn btn-warning float-right text-white">Abilita</a>
+              <a href="/users/enable/<?php echo $user["id"]; ?>" class="btn btn-warning float-right text-white" style="margin-right: 10px;">Abilita</a>
             <?php endif; ?>  
          </div>
         </div>

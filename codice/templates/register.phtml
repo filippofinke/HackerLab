@@ -37,7 +37,7 @@
             <a class="nav-link" href="/register">Registrati</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/reset">Reset database</a>
+            <a class="nav-link" onclick="if(confirm('Sicuro di voler eseguire un reset del database?')) { window.location.href= '/reset';}">Reset database</a>
           </li>
         </ul>
       </div>

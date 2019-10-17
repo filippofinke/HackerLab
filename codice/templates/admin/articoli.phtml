@@ -49,7 +49,7 @@
             <a class="nav-link" href="/logout">Esci</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/reset">Reset database</a>
+           <a class="nav-link" onclick="if(confirm('Sicuro di voler eseguire un reset del database?')) { window.location.href= '/reset';}">Reset database</a>
           </li>
         </ul>
       </div>
@@ -84,7 +84,7 @@
         <div class="card mb-4">
           <!-- Se l'articolo possiede un immagine, stampa il tag img -->
           <?php if($article["image"] != null): ?>
-          <img style="max-height: 200px; margin:auto; padding: 0px;" src="/image/?file_name=<?php echo $article["image"]; ?>">
+          <img class="article-image" src="/image/?file_name=<?php echo $article["image"]; ?>">
           <?php endif; ?>
           <!-- Stampa delle varie informazioni dell'articolo -->
           <div class="card-body">

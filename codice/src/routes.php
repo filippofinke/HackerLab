@@ -20,7 +20,7 @@ return function (App $app) {
       */
     $admin_middleware = function ($request, $response, $next) {
         if (!isset($_SESSION["user"])) {
-            $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso!";
+            $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso! <a href='#login'>Accedi!</a>";
             return $response->withRedirect("/", 302);
         }
         if($_SESSION["user"]["permission"] != "administrator") {
@@ -36,7 +36,7 @@ return function (App $app) {
      */
     $login_middleware = function ($request, $response, $next) {
         if (!isset($_SESSION["user"])) {
-            $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso!";
+            $_SESSION["big_error"] = "Per eseguire questa azione devi aver eseguito l'accesso! <a href='#login'>Accedi!</a>";
             return $response->withRedirect("/", 302);
         }
         $response = $next($request, $response);
