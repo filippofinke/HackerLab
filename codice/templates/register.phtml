@@ -56,20 +56,20 @@
           <form action="/register" method="post">
             <div class="form-group">
               <label for="full_name">Nome e cognome</label>
-              <input type="text" class="form-control" name="full_name" placeholder="Nome e cognome">
+              <input type="text" class="form-control" name="full_name" placeholder="Nome e cognome" required>
               <small class="form-text text-muted">Verrà mostrato ad altri utenti.</small>
             </div>
             <div class="form-group">
               <label for="email">Indirizzo email</label>
-              <input type="email" class="form-control" name="email" placeholder="Email">
+              <input type="email" class="form-control" name="email" placeholder="Email" required>
             </div>
             <div class="form-group">
               <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" placeholder="Password">
+              <input type="password" class="form-control" name="password" placeholder="Password" required>
             </div>
             <div class="form-group">
               <label for="repeat_password">Ripeti la password</label>
-              <input type="password" class="form-control" name="repeat_password" placeholder="Ripeti la password">
+              <input type="password" class="form-control" name="repeat_password" placeholder="Ripeti la password" required>
             </div>
             <!-- Se è presente un errore, mostralo all'utente -->
             <?php if (isset($_SESSION["error"])): ?>
