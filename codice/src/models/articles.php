@@ -53,13 +53,13 @@ class Articles
     /**
      * Metodo che permette di ricavare un articolo attraverso il suo id.
      *
-     * @param Integer $post_id L'id dell'articolo.
+     * @param Integer $article_id L'id dell'articolo.
      * @return Array L'articolo.
      */
-    public static function getById($post_id)
+    public static function getById($article_id)
     {
-        $query = Database::get()->prepare("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles WHERE id = :post_id");
-        $query->bindParam(":post_id", $post_id);
+        $query = Database::get()->prepare("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles WHERE id = :article_id");
+        $query->bindParam(":article_id", $article_id);
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }

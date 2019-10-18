@@ -37,6 +37,8 @@ class Database
 
     /**
      * Metodo utilizzato per ripristinare il database.
+     * 
+     * @return Boolen Se il database è stato resettato o no.
      */
     public static function reset()
     {
