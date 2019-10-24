@@ -140,7 +140,7 @@ class Users {
             $_SESSION["success"] = "Password impostata con successo!";
             return true;
         } else {
-            $_SESSION["reset_password"] = "Codice di recupero invalido!";
+            $_SESSION["reset_password"] = "Codice di recupero non valido!";
             return false;
         }
     }
@@ -156,7 +156,8 @@ class Users {
         if($user) {
 
             /**
-             * VULNERABILE!
+             * ATTENZIONE: La generazione del token di reset è vulnerabile, questo
+             *             perchè viene generata in base al tempo corrente della richiesta.
              */
             $reset_token = base64_encode(time());
 
@@ -173,7 +174,7 @@ class Users {
                 $_SESSION["success"] = "Email di recupero inviata!";
                 return true;
             } else {
-                $_SESSION["error"] = "Impossibile resettare la password!";
+                $_SESSION["error"] = "Impossibile inviare un email di recupero password!";
                 return false;
             }
         }
@@ -197,7 +198,8 @@ class Users {
                 return false;
             } else if(password_verify($password, $user["password"])) {
                 /**
-                 * VULNERABILE!
+                 * ATTENZIONE: Il cookie permission può essere modificato facilemente, 
+                 *             è quindi vulnerabile!
                  */
                 setcookie('permission', base64_encode($user["permission"]));
                 $_SESSION["user"] = array(
@@ -215,6 +217,9 @@ class Users {
 
     /**
      * Metodo che permette di registrare un utente.
+     * 
+     * ATTENZIONE: Se si mette un nome utente molto lungo verrà sollevata una eccezione
+     *             da parte del database.
      * 
      * @param String $full_name Il nome completo.
      * @param String $email L'email.

@@ -27,9 +27,12 @@ class Database
     public static function connect($settings)
     {
         try {
-            self::$connection = new PDO('mysql:host='.$settings["host"].';dbname='.$settings["dbname"], $settings["user"], $settings["password"], array(
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ));
+            self::$connection = new PDO(
+                'mysql:host='.$settings["host"].';dbname='.$settings["dbname"], 
+                $settings["user"], 
+                $settings["password"], 
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)       
+            );
         } catch (PDOException $e) {
             exit("Impossibile collegarsi al database. ".$e->getMessage());
         }

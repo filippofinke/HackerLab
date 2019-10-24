@@ -47,12 +47,23 @@ return function (App $app) {
      * Chiamate dirette.
      */
 
-     $app->get('/reset', function (Request $request, Response $response, array $args)  use ($app) {
+    /**
+     * Percorso /reset
+     * 
+     * Permette di resettare il contenuto del database.
+     * 
+     * ATTENZIONE: Contiene una vulnerabilità.
+     */
+    $app->get('/reset', function (Request $request, Response $response, array $args) {
         if (Database::reset()) {
             $_SESSION["success"] = "Database ripristinato con successo!";
         } else {
             $_SESSION["error"] = "Impossibile ripristinare il database!";
         }
+        /**
+         * ATTENZIONE: È possibile bypassare il redirect di logout e quindi
+         *             risultare loggati con un utente che non esiste.
+         */
         return $response->withRedirect("/logout", 302);
     });
 
@@ -64,8 +75,14 @@ return function (App $app) {
      * Utilizzato per ricavare le immagini degli articoli.
      * ATTENZIONE: Questo percorso è vulnerabile all'attacco Directory traversal o File Inclusion Vulnerability!
      */
-    $app->get('/image/', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/image/', function (Request $request, Response $response, array $args) {
         $file_name = $request->getParam('file_name');
+        /**
+         * ATTENZIONE: Il nome del file può essere modificato permettendo ad
+         *             un malintenzionato di navigare il file system.
+         *             ES: file_name = ../composer.json
+         *             Questo porterà a stampare il contenuto del file composer.json
+         */
         $file_path = __DIR__.'/../storage/'.$file_name;
         if (file_exists($file_path)) {
             $content = file_get_contents($file_path);
@@ -81,7 +98,7 @@ return function (App $app) {
      * 
      * Permette ad un utente di eliminare la propria sessione.
      */
-    $app->get('/logout', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/logout', function (Request $request, Response $response, array $args) {
         unset($_SESSION["user"]);
         setcookie("permission", '', time() - 3600);
         return $response->withRedirect("/", 302);
@@ -95,8 +112,9 @@ return function (App $app) {
      * Utilizzato per inviare email di recupero password.
      * ATTENZIONE: Questo percorso è vulnerabile all'attacco Session Prediction!
      */
-    $app->post('/reset', function (Request $request, Response $response, array $args) use ($app) {
+    $app->post('/reset', function (Request $request, Response $response, array $args) {
         $email = $request->getParam('email');
+        // La funzione generateResetToken è vulnerabile.
         Users::generateResetToken($email);
         return $response->withRedirect("/", 302);
     });
@@ -109,7 +127,7 @@ return function (App $app) {
      * 
      * Utilizzato per autenticare un utente.
      */
-    $app->post('/login', function (Request $request, Response $response, array $args) use ($app) {
+    $app->post('/login', function (Request $request, Response $response, array $args) {
         $email = $request->getParam('email');
         $password = $request->getParam('password');
         Users::login($email, $password);
@@ -125,7 +143,7 @@ return function (App $app) {
      * 
      * Utilizzato per impostare una password attraverso il token di recupero.
      */
-    $app->post('/reset_password', function (Request $request, Response $response, array $args) use ($app) {
+    $app->post('/reset_password', function (Request $request, Response $response, array $args) {
         $reset_token = $request->getParam('reset_token');
         $password = $request->getParam('password');
         $repeat_password = $request->getParam('repeat_password');
@@ -145,8 +163,11 @@ return function (App $app) {
      *  repeat_password = la password ripetuta.     
      * 
      * Utilizzato per la creazione di un utente.
-     * */
-    $app->post('/register', function (Request $request, Response $response, array $args) use ($app) {
+     * 
+     * ATTENZIONE: Se si mette un nome utente molto lungo (>30 caratteri) verrà sollevata una eccezione
+     *             da parte del database.
+     */
+    $app->post('/register', function (Request $request, Response $response, array $args) {
         $full_name = $request->getParam('full_name');
         $email = $request->getParam('email');
         $password = $request->getParam('password');
@@ -164,7 +185,7 @@ return function (App $app) {
      * 
      * Pagina principale, vengono mostrati gli utili articoli.
      */
-    $app->get('/[page/{page}]', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/[page/{page}]', function (Request $request, Response $response, array $args) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
         $page = $args["page"] ?? 0;
         if(!is_numeric($page)) $page = 0;
@@ -187,7 +208,7 @@ return function (App $app) {
     /**
      * Pagina di registrazione.
      */
-    $app->get('/register', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/register', function (Request $request, Response $response, array $args) {
         if(isset($_SESSION["user"])) return $response->withRedirect("/", 302);
         $this->view->render($response, "register.phtml", $args);
     });
@@ -201,7 +222,7 @@ return function (App $app) {
      * 
      * Pagina di profilo di un utente.
      */
-    $app->get('/profile[/{user_id}]', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/profile[/{user_id}]', function (Request $request, Response $response, array $args) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
         $user_id = $args["user_id"] ?? $_SESSION["user"]["id"];
         $user = Users::getById($user_id);
@@ -223,7 +244,7 @@ return function (App $app) {
      * 
      * Pagina di un articolo.
      */
-    $app->get('/post/{post_id}', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/post/{post_id}', function (Request $request, Response $response, array $args) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
         $post = Articles::getById($args["post_id"]);
         if ($post) {
@@ -244,7 +265,7 @@ return function (App $app) {
      * 
      * Utilizzato per aggiungere un commento ad un articolo.
      */
-    $app->post('/post/{post_id}', function (Request $request, Response $response, array $args) use ($app) {
+    $app->post('/post/{post_id}', function (Request $request, Response $response, array $args) {
         $comment = $request->getParam("comment");
         $post = Articles::getById($args["post_id"]);
         if ($post) {
@@ -268,7 +289,7 @@ return function (App $app) {
      * 
      * Utilizzato per la creazione di un articolo.
      */
-    $app->post('/post', function (Request $request, Response $response, array $args) use ($app) {
+    $app->post('/post', function (Request $request, Response $response, array $args) {
         
         $title = $request->getParam('title');
         $content = $request->getParam('content');
@@ -286,7 +307,7 @@ return function (App $app) {
      * 
      * Pagina di amministrazione degli articoli.
      */
-    $app->get('/admin/articles[/{page}]', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/admin/articles[/{page}]', function (Request $request, Response $response, array $args) {
         $page = $args["page"] ?? 0;
         if(!is_numeric($page)) $page = 0;
 
@@ -306,7 +327,7 @@ return function (App $app) {
      * 
      * Utilizzato per eliminare un articolo.
      */
-    $app->get('/articles/delete/{article_id}', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/articles/delete/{article_id}', function (Request $request, Response $response, array $args) {
         Articles::delete($args["article_id"]);
         return $response->withRedirect("/admin/articles", 302);
     })->add($admin_middleware);
@@ -316,7 +337,7 @@ return function (App $app) {
      * 
      * Pagina di amministrazione utenti.
      */
-    $app->get('/admin/users', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/admin/users', function (Request $request, Response $response, array $args) {
         $this->view->render($response, "admin/utenti.phtml", array(
             'users' => Users::get()
         ));
@@ -327,7 +348,7 @@ return function (App $app) {
      * 
      * Utilizzato per eliminare un utente.
      */
-    $app->get('/users/delete/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/users/delete/{user_id}', function (Request $request, Response $response, array $args) {
         Users::delete($args["user_id"]);
         return $response->withRedirect("/admin/users", 302);
     })->add($admin_middleware);
@@ -337,7 +358,7 @@ return function (App $app) {
      * 
      * Utilizzato per disabilitare un utente.
      */
-    $app->get('/users/disable/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/users/disable/{user_id}', function (Request $request, Response $response, array $args) {
         Users::disable($args["user_id"]);
         return $response->withRedirect("/admin/users", 302);
     })->add($admin_middleware);
@@ -347,7 +368,7 @@ return function (App $app) {
      * 
      * Utilizzato per abilitare un utente.
      */
-    $app->get('/users/enable/{user_id}', function (Request $request, Response $response, array $args) use ($app) {
+    $app->get('/users/enable/{user_id}', function (Request $request, Response $response, array $args) {
         Users::enable($args["user_id"]);
         return $response->withRedirect("/admin/users", 302);
     })->add($admin_middleware);

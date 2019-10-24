@@ -15,10 +15,7 @@ class Articles
     private static $limit = 3;
 
     /**
-     * VULNERABILE!
-     *
      * Metodo che permette di eseguire una ricerca tra gli articoli.
-     * ES: SQL Injection "a%'; DROP DATABASE hackerlab; --"
      *
      * @param String $search La ricerca da effettuare.
      * @param Integer $page Il numero di pagina.
@@ -29,6 +26,11 @@ class Articles
         $limit = self::$limit;
         $offset = $limit * $page;
         $search = "'%".$search."%'";
+        /**
+         * ATTENZIONE: La query di ricerca non utilizza dei prepared statements.
+         *             Questa funzione permette quindi di eseguire del codice SQL
+         *             malevolo. ES: SQL Injection "a%'; DELETE FROM articles; --"
+         */
         $query = Database::get()->query("SELECT *, (SELECT full_name FROM users WHERE id = user_id) as 'full_name' FROM articles WHERE title LIKE $search ORDER BY created_at DESC LIMIT $limit OFFSET $offset");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -90,9 +92,17 @@ class Articles
     public static function insert($user_id, $title, $image, $content)
     {
         $title = htmlspecialchars($title);
+
+        /**
+         * ATTENZIONE: Questa funzione non è adatta per proteggere da attacchi XSS.
+         *             È quindi possibile inserire del codice JavaScript malevolo,
+         *             all'interno del contenuto di un articolo.
+         *             Riferimento: https://www.php.net/manual/en/function.strip-tags.php
+         */
         $content = strip_tags($content, '<h1><ul><li><a><br><img><code>');
 
         if (empty($title) || empty($content)) {
+            $_SESSION["article_error"] = "Il titolo o il contenuto non possono essere vuoti!";
             return false;
         }
 
@@ -123,6 +133,7 @@ class Articles
         $query->execute();
         if (!$query) {
             $_SESSION["article_error"] = "Impossibile inserire l'articolo!";
+            return false;
         }
         return true;
     }
