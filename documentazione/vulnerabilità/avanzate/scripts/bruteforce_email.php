@@ -5,7 +5,7 @@
  * Script che permette di eseguire un attacco di tipo bruteforce alle email di HackerLab.
  */
 
- /**
+/**
  * L'url del percorso per il reset della password di HackerLab.
  */
 define("URL", "http://127.0.0.1/reset");
