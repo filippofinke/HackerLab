@@ -19,6 +19,7 @@ session_start();
 $settings = array(
     'settings' => [
         // Abilita i messaggi di errore a schermo.
+        // Security Misconfiguration
         'displayErrorDetails' => true
     ],
     'database' => [
