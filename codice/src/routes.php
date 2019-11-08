@@ -221,6 +221,8 @@ return function (App $app) {
      * Percorso /profilo o /profilo/{user_id}
      * 
      * Pagina di profilo di un utente.
+     * 
+     * ATTENZIONE: Presente vulnerabilità di tipo Insecure Direct Object References.
      */
     $app->get('/profile[/{user_id}]', function (Request $request, Response $response, array $args) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
@@ -243,6 +245,8 @@ return function (App $app) {
      * Percorso /post/{post_id}
      * 
      * Pagina di un articolo.
+     * 
+     * ATTENZIONE: Presente vulnerabilità di tipo Insecure Direct Object References.
      */
     $app->get('/post/{post_id}', function (Request $request, Response $response, array $args) {
         $permission = isset($_COOKIE["permission"])?base64_decode($_COOKIE["permission"]):null;
@@ -264,11 +268,14 @@ return function (App $app) {
      *  comment = il commento.
      * 
      * Utilizzato per aggiungere un commento ad un articolo.
+     * 
+     * ATTENZIONE: Presente vulnerabilità di tipo Insecure Direct Object References.
      */
     $app->post('/post/{post_id}', function (Request $request, Response $response, array $args) {
         $comment = $request->getParam("comment");
         $post = Articles::getById($args["post_id"]);
         if ($post) {
+            // Controllo che il commento non sia vuoto
             if (preg_replace('/\s+/', '', $comment) != "") {
                 Comments::insert($post["id"], $_SESSION["user"]["id"], $comment);
             } else {
@@ -306,6 +313,7 @@ return function (App $app) {
      * Percorso /admin/articles o /admin/articles/{page}
      * 
      * Pagina di amministrazione degli articoli.
+     * 
      */
     $app->get('/admin/articles[/{page}]', function (Request $request, Response $response, array $args) {
         $page = $args["page"] ?? 0;
@@ -326,6 +334,8 @@ return function (App $app) {
      * Percorso /articles/delete/{article_id}
      * 
      * Utilizzato per eliminare un articolo.
+     * 
+     * ATTENZIONE: Presente vulnerabilità di tipo Insecure Direct Object References.
      */
     $app->get('/articles/delete/{article_id}', function (Request $request, Response $response, array $args) {
         Articles::delete($args["article_id"]);
@@ -347,6 +357,8 @@ return function (App $app) {
      * Percorso /users/delete/{user_id}
      * 
      * Utilizzato per eliminare un utente.
+     * 
+     * ATTENZIONE: Presente vulnerabilità di tipo Insecure Direct Object References.
      */
     $app->get('/users/delete/{user_id}', function (Request $request, Response $response, array $args) {
         Users::delete($args["user_id"]);
@@ -357,6 +369,8 @@ return function (App $app) {
      * Percorso /users/disable/{user_id}
      * 
      * Utilizzato per disabilitare un utente.
+     * 
+     * ATTENZIONE: Presente vulnerabilità di tipo Insecure Direct Object References.
      */
     $app->get('/users/disable/{user_id}', function (Request $request, Response $response, array $args) {
         Users::disable($args["user_id"]);
@@ -367,6 +381,8 @@ return function (App $app) {
      * Percorso /users/enable/{user_id}
      * 
      * Utilizzato per abilitare un utente.
+     * 
+     * ATTENZIONE: Presente vulnerabilità di tipo Insecure Direct Object References.
      */
     $app->get('/users/enable/{user_id}', function (Request $request, Response $response, array $args) {
         Users::enable($args["user_id"]);
