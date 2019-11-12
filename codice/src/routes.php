@@ -110,7 +110,7 @@ return function (App $app) {
      *  email = email alla quale inviare il link di recupero password.
      * 
      * Utilizzato per inviare email di recupero password.
-     * ATTENZIONE: Questo percorso è vulnerabile all'attacco Session Prediction!
+     * ATTENZIONE: Questo percorso è vulnerabile all'attacco Session Prediction / Account Takeover!
      */
     $app->post('/reset', function (Request $request, Response $response, array $args) {
         $email = $request->getParam('email');
