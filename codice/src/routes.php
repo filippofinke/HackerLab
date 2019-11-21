@@ -190,18 +190,21 @@ return function (App $app) {
         $page = $args["page"] ?? 0;
         if(!is_numeric($page)) $page = 0;
         $articles = [];
+
+        $maxPage = Articles::getMaxPage();
+        if($page > $maxPage) {
+            return $response->withRedirect("/page/".$maxPage, 302);
+        }
         if($request->getParam('search') !== null) {
             $articles = Articles::search($request->getParam('search'), $page);
         } else {
             $articles = Articles::get($page);
         }
-        if(count($articles) == 0 && $page != 0) {
-            return $response->withRedirect("/page/".($page - 1), 302);
-        }
         $this->view->render($response, "index.phtml", array(
             'permission' => $permission,
             'articles' => $articles,
-            'page' => $page
+            'page' => $page,
+            'maxPage' => $maxPage
         ));
     });
     
@@ -319,13 +322,16 @@ return function (App $app) {
         $page = $args["page"] ?? 0;
         if(!is_numeric($page)) $page = 0;
 
-        $articles = Articles::get($page);
-        if(count($articles) == 0 && $page != 0) {
-            return $response->withRedirect("/admin/articles/".($page - 1), 302);
+        $maxPage = Articles::getMaxPage();
+        if($page > $maxPage) {
+            return $response->withRedirect("/admin/articles/".$maxPage, 302);
         }
+
+        $articles = Articles::get($page);
 
         $this->view->render($response, "admin/articoli.phtml", array(
             'page' => $page,
+            'maxPage' => $maxPage,
             'articles' => $articles
         ));
     })->add($admin_middleware);

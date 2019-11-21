@@ -109,7 +109,7 @@
           <li class="page-item <?php if($page == 0) echo "disabled"; ?>">
             <a class="page-link" href="/admin/articles/<?php echo $oldpage; ?>">&larr; Recenti</a>
           </li>
-          <li class="page-item">
+          <li class="page-item <?php if($page == $maxPage) echo "disabled"; ?>">
             <a class="page-link" href="/admin/articles/<?php echo ($page + 1); ?>">Vecchi &rarr;</a>
           </li>
         </ul>
