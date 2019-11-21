@@ -2,3 +2,4 @@
 /codice/composer.lock
 /codice/storage/*
 !/codice/storage/.gitkeep
+!/codice/storage/f6d419b192e50b9c2d0914d970bf8ae4f862b50e4813c6eb34c8a0f4b6379668
