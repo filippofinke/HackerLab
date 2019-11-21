@@ -90,6 +90,8 @@
             </h2>
             <?php if(!$user["enabled"]): ?>
               <p class="text-danger">Disabilitato</p>
+            <?php else: ?>
+              <p class="text-success">Abilitato</p>
             <?php endif; ?>
             <?php echo $user["email"]; ?>
             <br>
