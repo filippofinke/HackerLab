@@ -59,7 +59,9 @@ class Articles
      */
     public static function getMaxPage() {
         $query = Database::get()->query("SELECT COUNT(*) FROM articles");
-        return round($query->fetch(PDO::FETCH_NUM)[0] / self::$limit) - 1;
+        $maxPage =  round($query->fetch(PDO::FETCH_NUM)[0] / self::$limit) - 1;
+        if($maxPage < 0) $maxPage = 0;
+        return $maxPage;
     }
 
     /**
