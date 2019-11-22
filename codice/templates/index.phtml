@@ -143,7 +143,7 @@
           <div class="card-body">
             <form method="GET" action="/">
               <div class="input-group">
-                <input type="text" class="form-control" name="search" placeholder="Ricerca...">
+                <input type="text" class="form-control" name="search" placeholder="Ricerca..." required>
                 <span class="input-group-btn">
                   <button class="btn btn-secondary" type="submit">Cerca!</button>
                 </span>
@@ -274,14 +274,14 @@
         <form action="/post" method="POST" enctype="multipart/form-data">
           <div class="modal-body">
               <div class="form-group">
-                <input type="text" class="form-control" name="title" placeholder="Titolo">
+                <input type="text" class="form-control" name="title" placeholder="Titolo" maxlength="255" required>
               </div>
               <div class="form-group">
                 <label for="image">Sfondo</label>
                 <input type="file" class="form-control-file" name="image">
               </div>
               <div class="form-group">
-                <textarea class="form-control" name="content" rows="10" placeholder="Contenuto"></textarea>
+                <textarea class="form-control" name="content" rows="10" placeholder="Contenuto" maxlength="2000" required></textarea>
                 <code>Sono permessi i tag html: h1, ul, li, a, img, code, br</code>
               </div>
           </div>

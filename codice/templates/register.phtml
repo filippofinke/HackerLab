@@ -56,7 +56,7 @@
           <form action="/register" method="post">
             <div class="form-group">
               <label for="full_name">Nome e cognome</label>
-              <input type="text" class="form-control" name="full_name" placeholder="Nome e cognome" required>
+              <input type="text" class="form-control" name="full_name" placeholder="Nome e cognome" pattern="^[a-zA-Z]*\s{0,1}[a-zA-Z]*$" required>
               <small class="form-text text-muted">Verrà mostrato ad altri utenti.</small>
             </div>
             <div class="form-group">
@@ -65,11 +65,11 @@
             </div>
             <div class="form-group">
               <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" placeholder="Password" required>
+              <input type="password" class="form-control" name="password" placeholder="Password" minlength="4" required>
             </div>
             <div class="form-group">
               <label for="repeat_password">Ripeti la password</label>
-              <input type="password" class="form-control" name="repeat_password" placeholder="Ripeti la password" required>
+              <input type="password" class="form-control" name="repeat_password" placeholder="Ripeti la password" minlength="4" required>
             </div>
             <!-- Se è presente un errore, mostralo all'utente -->
             <?php if (isset($_SESSION["error"])): ?>

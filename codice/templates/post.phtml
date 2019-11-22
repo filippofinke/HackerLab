@@ -98,7 +98,7 @@
           <div class="card-body">
             <form method="POST">
               <div class="form-group">
-                <textarea name="comment" maxlength="255" class="form-control" rows="2"></textarea>
+                <textarea name="comment" maxlength="255" class="form-control" rows="2" required></textarea>
               </div>
               <!-- Se è presente un errore, mostralo all'utente -->
               <?php if (isset($_SESSION["error"])): ?>
@@ -135,7 +135,7 @@
           <div class="card-body">
             <form method="GET" action="/">
               <div class="input-group">
-                <input type="text" class="form-control" name="search" placeholder="Ricerca...">
+                <input type="text" class="form-control" name="search" placeholder="Ricerca..." required>
                 <span class="input-group-btn">
                   <button class="btn btn-secondary" type="submit">Cerca!</button>
                 </span>
