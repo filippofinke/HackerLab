@@ -128,10 +128,10 @@
           if(isset($_GET["search"])) $search = "?search=".$_GET["search"];
           ?>
           <li class="page-item <?php if($page == 0) echo "disabled"; ?>">
-            <a class="page-link" href="/page/<?php echo $oldpage.$search; ?>">&larr; Recenti</a>
+            <a class="page-link" href="/page/<?php echo $oldpage.$search; ?>">&larr; Pagina precedente</a>
           </li>
           <li class="page-item <?php if($page == $maxPage) echo "disabled"; ?>">
-            <a class="page-link" href="/page/<?php echo ($page + 1).$search; ?>">Vecchi &rarr;</a>
+            <a class="page-link" href="/page/<?php echo ($page + 1).$search; ?>">Prossima pagina &rarr;</a>
           </li>
         </ul>
 

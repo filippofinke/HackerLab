@@ -107,10 +107,10 @@
           if($oldpage < 0) $oldpage = 0;
           ?>
           <li class="page-item <?php if($page == 0) echo "disabled"; ?>">
-            <a class="page-link" href="/admin/articles/<?php echo $oldpage; ?>">&larr; Recenti</a>
+            <a class="page-link" href="/admin/articles/<?php echo $oldpage; ?>">&larr; Pagina precedente</a>
           </li>
           <li class="page-item <?php if($page == $maxPage) echo "disabled"; ?>">
-            <a class="page-link" href="/admin/articles/<?php echo ($page + 1); ?>">Vecchi &rarr;</a>
+            <a class="page-link" href="/admin/articles/<?php echo ($page + 1); ?>">Prossima pagina &rarr;</a>
           </li>
         </ul>
       </div>

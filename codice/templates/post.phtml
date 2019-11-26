@@ -66,7 +66,11 @@
       <div class="col-lg-8">
 
         <!-- Stampa il titolo dell'articolo -->
-        <h1 class="mt-4"><?php echo $post["title"]; ?></h1>
+        <h1 class="mt-4">
+          <button type="button" class="btn btn-secondary" onclick="history.go(-1);">Torna indietro</button>
+          <br>
+          <?php echo $post["title"]; ?>
+        </h1>
 
         <!-- Stampa l'autore dell'articolo -->
         <p class="lead">

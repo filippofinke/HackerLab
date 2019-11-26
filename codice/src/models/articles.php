@@ -53,14 +53,36 @@ class Articles
     }
 
     /**
-     * Metodo che permette di ricavare la pagina massima.
-     * 
+     * Metodo che permette di ricavare la pagina massima di una ricerca.
+     *
+     * @param String $search La ricerca.
      * @return Integer La pagina massima.
      */
-    public static function getMaxPage() {
+    public static function getSearchMaxPage($search)
+    {
+        $search = '%'.$search.'%';
+        $query = Database::get()->prepare("SELECT COUNT(*) FROM articles WHERE title LIKE :title");
+        $query->bindParam(":title", $search, PDO::PARAM_STR);
+        $query->execute();
+        $maxPage =  ceil($query->fetch(PDO::FETCH_NUM)[0] / self::$limit) - 1;
+        if ($maxPage < 0) {
+            $maxPage = 0;
+        }
+        return $maxPage;
+    }
+
+    /**
+     * Metodo che permette di ricavare la pagina massima.
+     *
+     * @return Integer La pagina massima.
+     */
+    public static function getMaxPage()
+    {
         $query = Database::get()->query("SELECT COUNT(*) FROM articles");
-        $maxPage =  round($query->fetch(PDO::FETCH_NUM)[0] / self::$limit) - 1;
-        if($maxPage < 0) $maxPage = 0;
+        $maxPage =  ceil($query->fetch(PDO::FETCH_NUM)[0] / self::$limit) - 1;
+        if ($maxPage < 0) {
+            $maxPage = 0;
+        }
         return $maxPage;
     }
 
