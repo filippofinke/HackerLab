@@ -34,7 +34,7 @@
             <a class="nav-link" href="/">Home</a>
           </li>
           <!-- Controlla se l'utente ha eseguito l'accesso -->
-          <?php if($permission !== null): ?>
+          <?php if ($permission !== null): ?>
           <li class="nav-item">
             <a class="nav-link" href="/profile">Profilo</a>
           </li>
@@ -44,7 +44,7 @@
           </li>
           <?php endif; ?>
           <!-- Se l'utente è amministratore mostra i collegamenti al pannello amministrativo -->
-          <?php if($permission === "administrator"): ?>
+          <?php if ($permission === "administrator"): ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropDown" role="button" data-toggle="dropdown">
               Pannello di amministrazione
@@ -56,7 +56,7 @@
           </li>
           <?php endif; ?>
           <!-- Controlla se l'utente ha eseguito l'accesso -->
-          <?php if($permission !== null): ?>
+          <?php if ($permission !== null): ?>
           <li class="nav-item">
             <a class="nav-link" href="/logout">Esci</a>
           </li>
@@ -74,16 +74,16 @@
     <div class="row">
       <div class="col-md-8">
         <!-- Controlla se l'utente è arrivato alla pagina attraverso un'altra pagina o una ricerca -->
-        <?php if(isset($_GET["search"]) && $_GET["search"] != ""): ?>
+        <?php if (isset($_GET["search"]) && $_GET["search"] != ""): ?>
         <h1 class="my-4">Ricerca per <?php echo htmlspecialchars($_GET["search"]); ?></h1>
-        <?php elseif(isset($page) && $page != 0): ?>
-        <h1 class="my-4">Pagina <?php echo ($page + 1); ?></h1>
+        <?php elseif (isset($page) && $page != 0): ?>
+        <h1 class="my-4">Pagina <?php echo($page + 1); ?></h1>
         <?php else: ?>
         <h1 class="my-4">Ultimi articoli</h1>
         <?php endif; ?>
 
         <!-- Se è presente un errore, mostralo all'utente -->
-        <?php if(isset($_SESSION["big_error"])): ?>
+        <?php if (isset($_SESSION["big_error"])): ?>
         <div class="alert alert-danger" role="alert">
           <?php echo $_SESSION["big_error"]; ?>
           <?php unset($_SESSION["big_error"]); ?>
@@ -91,7 +91,7 @@
         <?php endif; ?>
 
         <!-- Controlla la presenza di articoli -->
-        <?php if(count($articles) == 0): ?>
+        <?php if (count($articles) == 0): ?>
         <div class="text-center">
             <h4>Non è presente nessun articolo.</h4>
             <button class="btn btn-primary" data-toggle="modal" data-target="#addArticle">Contribuisci a HackerLab</button>
@@ -100,10 +100,10 @@
         <?php endif;?>
 
         <!-- Stampa gli articoli presenti nel sito -->
-        <?php foreach($articles as $article): ?>
+        <?php foreach ($articles as $article): ?>
         <div class="card mb-4">
           <!-- Se l'articolo possiede un immagine, stampa il tag img -->
-          <?php if($article["image"] != null): ?>
+          <?php if ($article["image"] != null): ?>
           <img class="article-image" src="/image/?file_name=<?php echo $article["image"]; ?>">
           <?php endif; ?>
           <!-- Stampa delle varie informazioni dell'articolo -->
@@ -121,23 +121,31 @@
         <!-- Paginazione -->
         <ul class="pagination justify-content-center mb-4">
           <!-- Calcola le pagine precedenti e successive -->
-          <?php 
+          <?php
           $oldpage = $page - 1;
-          if($oldpage < 0) $oldpage = 0;
+          if ($oldpage < 0) {
+              $oldpage = 0;
+          }
           $search = "";
-          if(isset($_GET["search"])) $search = "?search=".$_GET["search"];
+          if (isset($_GET["search"])) {
+              $search = "?search=".$_GET["search"];
+          }
           ?>
-          <li class="page-item <?php if($page == 0) echo "disabled"; ?>">
+          <li class="page-item <?php if ($page == 0) {
+              echo "disabled";
+          } ?>">
             <a class="page-link" href="/page/<?php echo $oldpage.$search; ?>">&larr; Pagina precedente</a>
           </li>
-          <li class="page-item <?php if($page == $maxPage) echo "disabled"; ?>">
-            <a class="page-link" href="/page/<?php echo ($page + 1).$search; ?>">Prossima pagina &rarr;</a>
+          <li class="page-item <?php if ($page == $maxPage) {
+              echo "disabled";
+          } ?>">
+            <a class="page-link" href="/page/<?php echo($page + 1).$search; ?>">Prossima pagina &rarr;</a>
           </li>
         </ul>
 
       </div>
 
-      <div class="col-md-4">
+      <div class="col-lg-4">
         <div class="card my-4">
           <h5 class="card-header">Cerca</h5>
           <div class="card-body">
@@ -152,7 +160,7 @@
           </div>
         </div>
         <!-- Se l'utente non ha eseguito l'accesso mostra la schermata di login -->
-        <?php if($permission === null): ?>
+        <?php if ($permission === null): ?>
         <div class="card my-4">
           <h5 class="card-header">Accedi</h5>
           <div class="card-body">
@@ -169,7 +177,7 @@
                   </div>
                   
                   <!-- Se è presente un errore, mostralo all'utente -->
-                  <?php if(isset($_SESSION["error"])): ?>
+                  <?php if (isset($_SESSION["error"])): ?>
                   <div class="alert alert-danger" role="alert">
                     <?php echo $_SESSION["error"]; ?>
                     <?php unset($_SESSION["error"]); ?>
@@ -177,7 +185,7 @@
                   <?php endif; ?>
 
                   <!-- Se è presente un messaggio di successo, mostralo all'utente -->
-                  <?php if(isset($_SESSION["success"])): ?>
+                  <?php if (isset($_SESSION["success"])): ?>
                     <div class="alert alert-success" role="alert">
                       <?php echo $_SESSION["success"]; ?>
                       <?php unset($_SESSION["success"]); ?>
@@ -249,7 +257,7 @@
                 <input type="password" class="form-control" name="repeat_password" placeholder="Password">
               </div>
               <!-- Se è presente un errore, mostralo all'utente -->
-              <?php if(isset($_SESSION["reset_password"])): ?>
+              <?php if (isset($_SESSION["reset_password"])): ?>
               <div class="alert alert-danger" role="alert">
                 <?php echo $_SESSION["reset_password"]; ?>
                 <?php unset($_SESSION["reset_password"]); ?>
@@ -287,7 +295,7 @@
           </div>
           <div class="modal-footer">
             <!-- Se è presente un errore, mostralo all'utente -->
-            <?php if(isset($_SESSION["article_error"])): ?>
+            <?php if (isset($_SESSION["article_error"])): ?>
             <div class="alert alert-danger" role="alert">
               <?php echo $_SESSION["article_error"]; ?>
               <?php unset($_SESSION["article_error"]); ?>
