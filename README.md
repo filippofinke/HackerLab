@@ -4,6 +4,7 @@
 
 Installazione:
 - Importare il database
+- Eseguire `composer install`
 - Eseguire `composer start`
 
 Allegati:
