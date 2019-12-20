@@ -7,7 +7,8 @@ Installazione:
 - Eseguire `composer install`
 - Eseguire `composer start`
 
-Allegati:
+- [Documentazione](/documentazione/i4_finke_doc_prog1.pdf)
+- [Codice](/codice)
 - [Guide vulnerabilità](/documentazione/vulnerabilità/Vulnerabilità%20Tutte.pdf)
 - [Diari di lavoro](/diari/diari.pdf)
 - [Quaderno dei compiti](/QdC_Hacker%20Lab%20-%20Sito%20vulnerabilità.pdf)
